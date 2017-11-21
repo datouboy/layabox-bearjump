@@ -8,17 +8,23 @@
 	var Handler = Laya.Handler;
 	var WebGL   = Laya.WebGL;
     var Event   = Laya.Event;
-    var Gyroscope    = Laya.Gyroscope;
 
     var pageWidth  = Browser.clientWidth;
     var pageHeight = Browser.clientHeight;
 
     var gameBins; //浮冰控制
     var firstJump = true;//是否起跳前
+    var Tween;//初始化自定义Tween算法
+    var Tween_t = 0;//跳跃变化时间
+    var Tween_d = 60;//跳跃持续时间
+    var Tween_c = pageHeight*0.35;//跳跃高度
+    var Bear_Y;//起跳前记录北极熊的Y坐标
 
     function gameManage() {
         var _this = this;
 
+        //Tween自定义算法
+        Tween = new tweenFun();
         //初始化浮冰（浮冰添加、运动、消除）
         gameBins = new gameBin();
     }
@@ -151,8 +157,26 @@
         Laya.stage.once(Event.CLICK, this, bearJumpStart);
     }
     function bearJumpStart(){
-        console.log(1);
+        firstJump = false;
+        _proto.bearJump();
     }
 
+    //北极熊起跳
+    _proto.bearJump = function(){
+        var _this = this;
+        Bear_Y = tip_bear.y;
+        console.log('北极熊起跳');
+        Laya.timer.frameLoop(1, this, bearJumpGo);
+    }
+    function bearJumpGo(){
+        Tween_t += 1;
+        var bearY = Tween.Cubic.easeOut(Tween_t, 0, Tween_c, Tween_d);
+        tip_bear.y = Bear_Y - bearY;
+        if(Tween_t == Tween_d){
+            Laya.timer.clear(this, bearJumpGo);
+        }
+    }
+
+    
 
 })();
