@@ -17,7 +17,19 @@
     c: change in value（变化量）；
     d: duration（持续时间）。
     */
-
+    _proto.Linear = function(t,b,c,d){ return c*t/d + b; }
+	_proto.Quad = {
+		easeIn: function(t,b,c,d){
+			return c*(t/=d)*t + b;
+		},
+		easeOut: function(t,b,c,d){
+			return -c *(t/=d)*(t-2) + b;
+		},
+		easeInOut: function(t,b,c,d){
+			if ((t/=d/2) < 1) return c/2*t*t + b;
+			return -c/2 * (( t)*(t-2) - 1) + b;
+		}
+	}
     _proto.Cubic = {//弹性曲线强度1
         easeIn: function(t,b,c,d){
             return c*(t/=d)*t*t + b;
