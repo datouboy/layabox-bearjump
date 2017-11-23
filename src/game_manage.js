@@ -14,12 +14,13 @@
 
     var gameBins; //浮冰控制
     var firstJump = true;//是否起跳前
+    var MovingSpeed  = 0.3;//北极熊左右移动速度（越大越快）
     var JumpUpLine   = Math.round(pageHeight * 0.4);//跳跃停止线（北极熊的脚部触线为准）
     var JumpUpHeight = Math.round(pageHeight * 0.5);//北极熊每次跳跃的高度
     var pageBinDown  = 0;//当北极熊的跳跃高度超过停止线时所需的屏幕浮冰下滑值（为了方便，下面叫拉屏）
     var Tween;//初始化自定义Tween算法
     var Tween_t = 0;//跳跃变化时间
-    var Tween_d = 60;//跳跃持续时间
+    var Tween_d = 40;//跳跃持续时间
     var Tween_c = 0;//跳跃高度的变化量（每次需计算）
     var Bear_Y;//Tween起跳前记录北极熊的Y坐标
     var BinTempArray = [];//Tween冰运动前记录冰的Y坐标
@@ -130,16 +131,33 @@
         "gamma:" + Math.floor(event.gamma);//扭转设备
         //////////////////////////////////////////////////////////////////////////////
 
-        _proto.bearXMove(event.alpha);
+        //判断左右和扭转值，取大的值发送给北极熊移动
+        if(event.alpha >=0 && event.alpha <180){//向左倾斜
+            var alpha = event.alpha;
+        }else{//向右倾斜
+            var alpha = Math.abs(alpha-360);
+        }
+        var gamma = Math.abs(event.gamma);
+
+        if(alpha >= gamma){
+            _proto.bearXMove(event.alpha, 'alpha');
+        }else{
+            _proto.bearXMove(event.gamma, 'gamma');
+        }
+
     }
 
     //北极熊X方向移动
-    _proto.bearXMove = function(alpha){
+    _proto.bearXMove = function(xMove, type){
         //tip_bear
-        if(alpha >=0 && alpha <180){//向左倾斜
-            var xAdd = -(alpha * 0.3);
-        }else{//向右倾斜
-            var xAdd = Math.abs(alpha-360) * 0.3;
+        if(type == 'alpha'){
+            if(xMove >=0 && xMove <180){//向左倾斜
+                var xAdd = -(xMove * MovingSpeed);
+            }else{//向右倾斜
+                var xAdd = Math.abs(xMove-360) * MovingSpeed;
+            }
+        }else{
+            var xAdd = xMove * MovingSpeed;
         }
 
         //是否起跳前，起跳前只能在浮冰范围移动，起跳后可全屏移动
@@ -179,7 +197,7 @@
         }
     }
 
-    //北极熊起跳
+    //北极熊跳跃
     /*
         北极熊起跳主要逻辑：
         说明：使用自定义Tween实现跳跃物理抛物线缓动模拟
@@ -197,7 +215,7 @@
     _proto.bearJump = function(){
         var _this = this;
         Bear_Y = tip_bear.y;
-        console.log('北极熊起跳');
+        console.log('北极熊跳跃执行');
         //计算跳跃的变化量
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
             Tween_c = JumpUpHeight;
@@ -212,17 +230,27 @@
                 BinTempArray[index] = obj.y;
             }, this);
         }
-        Laya.timer.frameLoop(1, this, bearJumpGo);
+        Laya.timer.frameLoop(1, this, bearJumpGoUp);
     }
-    //北极熊跳跃动画
-    function bearJumpGo(){
+    //北极熊跳跃（跳起部分）
+    function bearJumpGoUp(){
         Tween_t += 1;//时间变量，每次跳跃后需要清0
-        var bearY = Tween.Cubic.easeOut(Tween_t, 0, Tween_c, Tween_d);
+        var bearY = Tween.Quad.easeOut(Tween_t, 0, Tween_c, Tween_d);
         tip_bear.y = Bear_Y - bearY;
         //同时执行拉屏
         binPageDown();
         if(Tween_t == Tween_d){
-            Laya.timer.clear(this, bearJumpGo);
+            Laya.timer.clear(this, bearJumpGoUp);
+            Tween_t = 0;
+            //北极熊跳跃（下降部分）
+            /*
+                Tween动画前的数据准备
+                1,计算北极熊下降所需的变化量
+                2,北极熊的Y轴位置
+            */
+            Tween_c = pageHeight - tip_bear.y;
+            Bear_Y = tip_bear.y;
+            Laya.timer.frameLoop(1, this, bearJumpGoDown);
         }
     }
     //拉屏
@@ -233,6 +261,40 @@
                 gameBins.binStageArray[index].y = BinTempArray[index] + binY;
             }, this);
         }
+    }
+    //北极熊跳跃（下降部分）
+    function bearJumpGoDown(){
+        Tween_t += 1;//时间变量，每次跳跃后需要清0
+        var bearY = Tween.Quad.easeIn(Tween_t, 0, Tween_c, Tween_d);
+        tip_bear.y = Bear_Y + bearY;
+        //下落时执行碰撞检测
+        collisionDetection();
+        if(Tween_t == Tween_d){
+            Laya.timer.clear(this, bearJumpGoDown);
+            Tween_t = 0;
+        }
+    }
+    //北极熊碰撞检测
+    function collisionDetection(){
+        gameBins.binStageArray.forEach(function(obj, index) {
+            //剔除圣诞树
+            if(!isExitsVariable(obj.myName)){
+                //console.log(tip_bear.x, tip_bear.y);
+                //console.log(obj.width, obj.height, obj.x, obj.y);
+            }
+        }, this);
+    }
+
+    //判断变量是否存在
+    function isExitsVariable(variableName) {
+        try {
+            if (typeof(variableName) == "undefined") {
+                return false;
+            } else {
+                return true;
+            }
+        } catch(e) {}
+        return false;
     }
 
 })();

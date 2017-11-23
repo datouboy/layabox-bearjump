@@ -55,6 +55,12 @@
             }, this);
             if(_this.binStageArray[_this.binStageArray.length-1].alpha >= 1){
                 Laya.timer.clear(_this, show_bin);
+                //添加最初站立的浮冰（带圣诞树的）
+                //用于后面拉屏使用
+                _this.binStageArray.push(start_di);
+                //用于后面的碰撞检测去除树
+                start_tree.myName = 'tree';
+                _this.binStageArray.push(start_tree);
             }
         }
     }

@@ -20,6 +20,9 @@
 
     var _proto = tipsPage.prototype;
 
+    //记录北极熊的宽度和高度
+    _proto.bearInfo = {}
+
     _proto.tipsBg = function(){
         var _this = this;
 
@@ -119,6 +122,10 @@
 
                 //添加监听事件，全屏点击开始游戏
                 Laya.stage.once(Event.CLICK, _this, tips_startMenu_Click);
+                //获取北极熊的宽高
+                var bearInfo = tip_bear.getBounds();
+                _proto.bearInfo.width  = bearInfo.width;
+                _proto.bearInfo.height = bearInfo.height;
             }
         }
 
