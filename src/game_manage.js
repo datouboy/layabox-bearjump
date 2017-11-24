@@ -24,6 +24,9 @@
     var Tween_c = 0;//跳跃高度的变化量（每次需计算）
     var Bear_Y;//Tween起跳前记录北极熊的Y坐标
     var BinTempArray = [];//Tween冰运动前记录冰的Y坐标
+    //碰撞检测所需的参数
+    var Bear_BoxInfo = {}//记录北极熊碰撞Box的信息
+    var Bin_TempInfo = [];//记录拉屏后浮冰的X、Y轴位置信息
 
     function gameManage() {
         var _this = this;
@@ -40,6 +43,9 @@
         Tween = new tweenFun();
         //初始化浮冰（浮冰添加、运动、消除）
         gameBins = new gameBin();
+        //获取北极熊的参数
+        Bear_BoxInfo.w = tipsPages.bearInfo.width * 0.4;
+        Bear_BoxInfo.h = 30;
     }
 
     Laya.class(gameManage, "gameManage", Sprite);
@@ -193,7 +199,7 @@
         Laya.stage.once(Event.CLICK, this, bearJumpStart);
         function bearJumpStart(){
             firstJump = false;
-            _proto.bearJump();
+            _this.bearJump();
         }
     }
 
@@ -207,6 +213,7 @@
             1.3：起跳前需要先添加浮冰
                 1.3.1：浮冰添加逻辑：
                        每次起跳前检查最高一块浮冰的Y轴位置，如果低于设定值，则一次性添加数块浮冰
+            1.4：起跳前初始化参数
         2：拉屏后执行逻辑：
             2.1：判断浮冰元素是否下方出界，出界的需要删除元素
         4：到达最高点后执行北极熊下落
@@ -214,7 +221,9 @@
     */
     _proto.bearJump = function(){
         var _this = this;
+        //初始化参数
         Bear_Y = tip_bear.y;
+        Tween_t = 0;
         console.log('北极熊跳跃执行');
         //计算跳跃的变化量
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
@@ -251,10 +260,34 @@
             Tween_c = pageHeight - tip_bear.y;
             Bear_Y = tip_bear.y;
             Laya.timer.frameLoop(1, this, bearJumpGoDown);
+
+            //获取浮冰的位置信息（定位点位于浮冰左下角）
+            /*
+                不清楚为什么LyayBox这里直接获取元素的x和y轴的位置信息错误，需要用getBounds方法才能获取正确的值
+            */
+            Bin_TempInfo = [];
+            gameBins.binStageArray.forEach(function(obj, index) {
+                Bin_TempInfo[index] = obj.getBounds();
+                Bin_TempInfo[index].y += Bin_TempInfo[index].height;
+                //计算浮冰盒子大小（此处大小并非浮冰元素实际大小，是截取浮冰中间区域的大小，以实现在显示效果上，需要北极熊双脚踩到浮冰才行）
+                //获取最终用于碰撞检测的盒子大小
+                Bin_TempInfo[index].boxInfo = returnBearBoxInfo(Bin_TempInfo[index]);
+            }, this);
+        }
+
+        //计算浮冰盒子大小（浮冰XY原点是左下角）
+        function returnBearBoxInfo(obj){
+            var binInfo = {}
+            binInfo.w = obj.width * 0.6;
+            binInfo.h = 35;
+            binInfo.x = obj.x + (obj.width * 0.2);
+            binInfo.y = obj.y - ((obj.height-35)/2);
+            return binInfo;
         }
     }
     //拉屏
     function binPageDown(){
+        //判断是否需要拉屏
         if(pageBinDown > 0){
             gameBins.binStageArray.forEach(function(obj, index) {
                 var binY = Tween.Cubic.easeOut(Tween_t, 0, pageBinDown, Tween_d);
@@ -268,21 +301,133 @@
         var bearY = Tween.Quad.easeIn(Tween_t, 0, Tween_c, Tween_d);
         tip_bear.y = Bear_Y + bearY;
         //下落时执行碰撞检测
-        collisionDetection();
+        collisionDetection(this);
         if(Tween_t == Tween_d){
             Laya.timer.clear(this, bearJumpGoDown);
             Tween_t = 0;
+            console.log('游戏失败');
         }
     }
     //北极熊碰撞检测
-    function collisionDetection(){
+    /*
+        设北极熊脚步区域为一个方盒子空间
+        设每个浮冰的中间区域为一个方盒空间
+        去掉高于脚部的浮冰
+        循环检测方盒是否有重叠
+
+        方盒重叠逻辑
+        设A方盒 B方盒
+        对比方盒的宽高，设置小方盒为B，大方盒为A
+        只需要对比宽度即可
+        B方盒4个角位置依次比对
+        大于等于X小于、等于X+Width
+        Y轴同理
+    */
+    function collisionDetection(_bearJumpGoDown_this){
+        //性能优化、减少计算次数
+        //if(Tween_t % 2 == 0){
+        var collisionOK = false;
         gameBins.binStageArray.forEach(function(obj, index) {
             //剔除圣诞树
             if(!isExitsVariable(obj.myName)){
-                //console.log(tip_bear.x, tip_bear.y);
-                //console.log(obj.width, obj.height, obj.x, obj.y);
+                //剔除高于北极熊脚步的浮冰
+                if(Bin_TempInfo[index].boxInfo.y > tip_bear.y + Bear_BoxInfo.h){
+                    //console.log('计算：');
+                    //boxContrast(Bin_TempInfo[index].boxInfo, );
+                    if(!collisionOK){
+                        var collisionOK_c = collisionReturn(Bin_TempInfo[index].boxInfo, returnBearBox(tip_bear));
+                        if(collisionOK_c){
+                            collisionOK = true;
+                        }
+                    }
+                }
             }
         }, this);
+        if(collisionOK){
+            console.log('检测到碰撞');
+            //中断北极熊下落循环
+            Laya.timer.clear(_bearJumpGoDown_this, bearJumpGoDown);
+            Tween_t = 0;
+            _proto.bearJump();
+        }
+        //}
+
+        //碰撞比对，返回碰撞结果
+        function collisionReturn(boxA, boxB){
+            //对比方盒的宽高，返回的对象小方盒为boxB，大方盒为boxA
+            var box = boxContrast(boxA, boxB);
+            //触碰检测
+            /*
+                相当于判断B方盒4个直角点是否在A盒子的所在区域内
+                B方盒4个角位置依次比对A方盒所在区域
+                大于等于X小于、等于X+Width
+                Y轴同理
+            */
+            //获取小盒子的4个直角位置的坐标点
+            var spotArray = [];
+            spotArray.push({x:box.boxB.x, y:box.boxB.y});
+            spotArray.push({x:box.boxB.x + box.boxB.w, y:box.boxB.y});
+            spotArray.push({x:box.boxB.x + box.boxB.w, y:box.boxB.y - box.boxB.h});
+            spotArray.push({x:box.boxB.x, y:box.boxB.y - box.boxB.h});
+
+            var returnVal = false;
+            for(var i=0; i<=spotArray.length-1; i++){
+                if(boxCollisionReturn(box.boxA, spotArray[i])){
+                    returnVal = true;
+                    break;
+                }
+            }
+            return returnVal;
+
+            //单个点的检测，检测点的XY坐标是否在盒子内
+            function boxCollisionReturn(box, spot){
+                ////////////////////////////////////////////////////////////////
+                //测试轨迹显示
+                //画矩形
+                /*
+                var qqsp = new Sprite();//冰
+                Laya.stage.addChild(qqsp);
+                qqsp.graphics.drawRect(box.x, box.y-box.h, box.w, box.h, "#ffff00");
+                qqsp.zOrder = 10;
+
+                var qqsp2 = new Sprite();//熊
+                Laya.stage.addChild(qqsp2);
+                qqsp2.graphics.drawRect(spot.x, spot.y, 5, 5, "#ff0000");
+                qqsp2.zOrder = 11;
+                */
+                ///////////////////////////////////////////////////////////////
+                
+                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-5 <= spot.y && box.y >= spot.y){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        //对比方盒的宽高，设置小方盒为B，大方盒为A
+        function boxContrast(boxA, boxB){
+            var boxObj = {}
+            if (boxA.w >= boxB.w){
+                boxObj.boxA = boxA;
+                boxObj.boxB = boxB;
+            }else{
+                boxObj.boxA = boxB;
+                boxObj.boxB = boxA;
+            }
+            return boxObj;
+        }
+
+        //返回北极熊的碰撞盒子信息
+        function returnBearBox(bearInfo){
+            var BearBox = {
+                w : Bear_BoxInfo.w,
+                h : Bear_BoxInfo.h,
+                x : bearInfo.x + 10,
+                y : bearInfo.y,
+            }
+            return BearBox;
+        }
     }
 
     //判断变量是否存在

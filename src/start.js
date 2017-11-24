@@ -146,7 +146,7 @@
             start_bear.clear();
 
             //加载tips页面
-            var tipsPages = new tipsPage();
+            tipsPages = new tipsPage();
 
             //设置元素层级
             start_di.zOrder = 2;
