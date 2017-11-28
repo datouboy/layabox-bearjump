@@ -28,6 +28,10 @@
     var Bear_BoxInfo = {}//记录北极熊碰撞Box的信息
     var Bin_TempInfo = [];//记录拉屏后浮冰的X、Y轴位置信息
 
+    var JumpNum = 0;//北极熊跳跃次数
+    var IsAddEndBin = false;//是否已添加终点浮冰
+    var GameIsWin = false;//游戏是否已经赢了
+
     function gameManage() {
         var _this = this;
 
@@ -134,7 +138,8 @@
         testInfo.text = 
         "alpha:" + Math.floor(event.alpha) + '\n' +//左右旋转
         "beta :" + Math.floor(event.beta) + '\n' +//前后旋转
-        "gamma:" + Math.floor(event.gamma);//扭转设备
+        "gamma:" + Math.floor(event.gamma) + '\n' +//扭转设备
+        "Jump Num:" + JumpNum;
         //////////////////////////////////////////////////////////////////////////////
 
         //判断左右和扭转值，取大的值发送给北极熊移动
@@ -221,8 +226,19 @@
     */
     _proto.bearJump = function(){
         var _this = this;
+        //计算北极熊跳跃次数
+        JumpNum ++;
+        //当跳跃次数超过65次，加载终点浮冰
+        if(JumpNum >= 30){
+            if(!IsAddEndBin){
+                gameBins.addEndBinToStage();
+                IsAddEndBin = true;
+            }
+        }
         //添加浮冰
-        gameBins.addNewBin();
+        if(!IsAddEndBin){
+            gameBins.addNewBin(JumpNum);
+        }
         //初始化参数
         Bear_Y = tip_bear.y;
         Tween_t = 0;
@@ -300,10 +316,11 @@
     //北极熊跳跃（下降部分）
     function bearJumpGoDown(){
         Tween_t += 1;//时间变量，每次跳跃后需要清0
+        var old_y = tip_bear.y;
         var bearY = Tween.Quad.easeIn(Tween_t, 0, Tween_c, Tween_d);
         tip_bear.y = Bear_Y + bearY;
         //下落时执行碰撞检测
-        collisionDetection(this);
+        collisionDetection(this, old_y, tip_bear.y);
         if(Tween_t == Tween_d){
             Laya.timer.clear(this, bearJumpGoDown);
             Tween_t = 0;
@@ -325,11 +342,27 @@
         大于等于X小于、等于X+Width
         Y轴同理
     */
-    function collisionDetection(_bearJumpGoDown_this){
+    function collisionDetection(_bearJumpGoDown_this, old_y, new_y){
+        //console.log(old_y, new_y);
+        //用于计算两个落点直接的补偿
+        old_y = Math.round(old_y);
+        new_y = Math.round(new_y);
         //性能优化、减少计算次数
-        //if(Tween_t % 2 == 0){
         var collisionOK = false;
         gameBins.binStageArray.forEach(function(obj, index) {
+            //判断是否是到了终点
+            if(isExitsVariable(obj.myName)){
+                if(obj.myName == 'end'){
+                    var collisionOK_end = collisionReturn(Bin_TempInfo[index].boxInfo, returnBearBox(tip_bear));
+                    if(collisionOK_end){
+                        //游戏结束
+                        collisionOK = true;
+                        GameIsWin = true;
+                        //游戏胜利
+                        _proto.gameWinner(Bin_TempInfo[index]);
+                    }
+                }
+            }
             //剔除圣诞树
             if(!isExitsVariable(obj.myName)){
                 //剔除高于北极熊脚步的浮冰
@@ -340,7 +373,24 @@
                         var collisionOK_c = collisionReturn(Bin_TempInfo[index].boxInfo, returnBearBox(tip_bear));
                         if(collisionOK_c){
                             collisionOK = true;
-                        }
+                        }/*else{
+                            //由于下落后期过快，北极熊会直接错过浮冰，需要计算补偿
+                            //循环检测补偿的碰撞，每10像素检查
+                            for(var i=0; i<=new_y - old_y; i=i+10){
+                                var BearBoxInfo = {
+                                    w : Bear_BoxInfo.w,
+                                    h : Bear_BoxInfo.h,
+                                    x : tip_bear.x + 10,
+                                    y : old_y + i,
+                                }
+                                collisionOK_c = collisionReturn(Bin_TempInfo[index].boxInfo, BearBoxInfo);
+                                if(collisionOK_c){
+                                    collisionOK = true;
+                                    console.log('qweqweqweqweqweqwe');
+                                    break;
+                                }
+                            }
+                        }*/
                     }
                 }
             }
@@ -350,9 +400,10 @@
             //中断北极熊下落循环
             Laya.timer.clear(_bearJumpGoDown_this, bearJumpGoDown);
             Tween_t = 0;
-            _proto.bearJump();
+            if(!GameIsWin){
+                _proto.bearJump();
+            }
         }
-        //}
 
         //碰撞比对，返回碰撞结果
         function collisionReturn(boxA, boxB){
@@ -394,12 +445,13 @@
 
                 var qqsp2 = new Sprite();//熊
                 Laya.stage.addChild(qqsp2);
-                qqsp2.graphics.drawRect(spot.x, spot.y, 5, 5, "#ff0000");
+                qqsp2.graphics.drawRect(spot.x, spot.y, 2, 2, "#ff0000");
                 qqsp2.zOrder = 11;
                 */
+                
                 ///////////////////////////////////////////////////////////////
                 
-                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-5 <= spot.y && box.y >= spot.y){
+                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-10 <= spot.y && box.y >= spot.y){
                     return true;
                 }else{
                     return false;
@@ -430,6 +482,32 @@
             }
             return BearBox;
         }
+    }
+
+    //游戏胜利
+    _proto.gameWinner = function(endBinObj){
+        var _this = this;
+        //移除陀螺仪监听事件
+        window.removeEventListener("deviceorientation", onOrientationChange, false);
+        //游戏胜利的画面执行
+        //修正北极熊的位置，让北极熊到终点的中间
+        tip_bear.y = endBinObj.y - (endBinObj.height*0.22);
+        //tip_bear.x = pageWidth * 0.4;
+        Laya.timer.frameLoop(1, _this, tip_bear_xgo);
+
+        //熊动画
+        function tip_bear_xgo(){
+            tip_bear.x = Math.round(tip_bear.x);
+            var endX = Math.round(pageWidth * 0.4);
+            if(tip_bear.x > endX){
+                tip_bear.x --;
+            }else if(tip_bear.x < endX){
+                tip_bear.x ++;
+            }else if(tip_bear.x == endX){
+                Laya.timer.clear(this, tip_bear_xgo);
+            }
+        }
+        
     }
 
     //判断变量是否存在

@@ -88,7 +88,7 @@
     }
 
     //游戏中添加浮冰
-    _proto.addNewBin = function(){
+    _proto.addNewBin = function(JumpNum){
         var _this = this;
         //console.log('添加浮冰');
         var smallBin_Y = pageHeight;//获取最高浮冰的高度
@@ -111,6 +111,8 @@
 
             var n = _this.binStageArray.length;
             var jiange = Math.round(pageHeight * 0.15);//浮冰间隔
+            var jiange_buchang = JumpNum * 3;//浮冰间隔补偿(每次跳跃后增加浮冰的间隔)
+            jiange = jiange + jiange_buchang;
             _this.binArray.forEach(function(obj, index) {
                 //初始化浮冰的间隔
                 smallBin_Y = smallBin_Y - jiange;
@@ -131,6 +133,29 @@
         _this.binStageArray[n].pivotY = 0;
         _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[index].x, _this.binArray[index].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
         Laya.stage.addChild(_this.binStageArray[n]);
+    }
+
+    //添加终点浮冰至场景
+    _proto.addEndBinToStage = function(){
+        var _this = this;
+        //alert('结束');
+        var smallBin_Y = pageHeight;//获取最高浮冰的高度
+        _this.binStageArray.forEach(function(obj, index) {
+            var obj_y = obj.getBounds().y;
+            if(obj_y < smallBin_Y){
+                smallBin_Y = obj_y;
+            }
+        }, this);
+
+        //console.log(smallBin_Y);
+
+        var n = _this.binStageArray.length;
+        _this.binStageArray[n] = new Sprite();
+        _this.binStageArray[n].pivotX = 0;
+        _this.binStageArray[n].pivotY = 0;//-(pageWidth*0.85)*(584/632);
+        _this.binStageArray[n].loadImage("res/images/end_di.png", 0, smallBin_Y - (Math.round(pageHeight * 0.25)*2), pageWidth*0.85, (pageWidth*0.85)*(584/632));
+        Laya.stage.addChild(_this.binStageArray[n]);
+        _this.binStageArray[n].myName = 'end';
     }
 
     //生成从minNum到maxNum的随机数
