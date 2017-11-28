@@ -221,6 +221,8 @@
     */
     _proto.bearJump = function(){
         var _this = this;
+        //添加浮冰
+        gameBins.addNewBin();
         //初始化参数
         Bear_Y = tip_bear.y;
         Tween_t = 0;

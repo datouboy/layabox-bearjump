@@ -76,7 +76,7 @@
         });
     }
 
-    //添加浮冰至场景
+    //添加浮冰至场景(首次)
     _proto.addBinToStage = function(n){
         var _this = this;
 
@@ -84,6 +84,52 @@
         _this.binStageArray[n].pivotX = 0;
         _this.binStageArray[n].pivotY = 0;
         _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[n].x, _this.binArray[n].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        Laya.stage.addChild(_this.binStageArray[n]);
+    }
+
+    //游戏中添加浮冰
+    _proto.addNewBin = function(){
+        var _this = this;
+        //console.log('添加浮冰');
+        var smallBin_Y = pageHeight;//获取最高浮冰的高度
+        _this.binStageArray.forEach(function(obj, index) {
+            var obj_y = obj.getBounds().y;
+            if(obj_y < smallBin_Y){
+                smallBin_Y = obj_y;
+            }
+        }, this);
+
+        //最高浮冰的Y轴大于-100时，添加浮冰
+        //添加浮冰的Y轴基数是Y轴位置最高的浮冰
+        if(smallBin_Y > -100){
+            //生成初始化浮冰数组
+            _this.binArray = [];
+            var y = 0;
+            for(var i=0; i<=6; i++){
+                _this.addBinToArray();
+            }
+
+            var n = _this.binStageArray.length;
+            var jiange = Math.round(pageHeight * 0.15);//浮冰间隔
+            _this.binArray.forEach(function(obj, index) {
+                //初始化浮冰的间隔
+                smallBin_Y = smallBin_Y - jiange;
+                obj.y = smallBin_Y;
+                var tn = n + index;
+                _this.addBinToStageFun(tn, index);
+            }, this);
+            //console.log(_this.binStageArray);
+        }
+    }
+
+    //添加浮冰至场景
+    _proto.addBinToStageFun = function(n,index){
+        var _this = this;
+
+        _this.binStageArray[n] = new Sprite();
+        _this.binStageArray[n].pivotX = 0;
+        _this.binStageArray[n].pivotY = 0;
+        _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[index].x, _this.binArray[index].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
         Laya.stage.addChild(_this.binStageArray[n]);
     }
 
