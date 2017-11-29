@@ -1,0 +1,71 @@
+{
+    "frames": {
+        "sea_1.png": {
+            "frame": {
+                "h": 100,
+                "idx": 0,
+                "w": 1500,
+                "x": 0,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 100,
+                "w": 1500
+            },
+            "spriteSourceSize": {
+                "h": 100,
+                "w": 1500,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "sea_2.png": {
+            "frame": {
+                "h": 100,
+                "idx": 0,
+                "w": 1500,
+                "x": 0,
+                "y": 101
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 100,
+                "w": 1500
+            },
+            "spriteSourceSize": {
+                "h": 100,
+                "w": 1500,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "sea_3.png": {
+            "frame": {
+                "h": 200,
+                "idx": 0,
+                "w": 200,
+                "x": 0,
+                "y": 202
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 200,
+                "w": 200
+            },
+            "spriteSourceSize": {
+                "h": 200,
+                "w": 200,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        }
+    },
+    "meta": {
+        "image": "tips_sea.png",
+        "prefix": "images/tips_sea/"
+    }
+}

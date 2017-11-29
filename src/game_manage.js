@@ -32,15 +32,19 @@
     var IsAddEndBin = false;//是否已添加终点浮冰
     var GameIsWin = false;//游戏是否已经赢了
 
+    var EndBinInfo_Winner;//游戏胜利后，获取最后终点浮冰的位置
+
     function gameManage() {
         var _this = this;
 
         //////////////////////////////////////////////////////////////////////////////
         //跳跃停止线：测试线
+        /*
         test_sp = new Sprite();
         Laya.stage.addChild(test_sp);
         test_sp.graphics.drawLine(0, JumpUpLine, pageWidth, JumpUpLine, "#ff0000", 5);
         test_sp.zOrder = 9;
+        */
         //////////////////////////////////////////////////////////////////////////////
 
         //Tween自定义算法
@@ -126,6 +130,7 @@
         testInfo.color = "#000000";
         testInfo.x = 10;
         testInfo.y = 10;
+        testInfo.alpha = 0.5;
         Laya.stage.addChild(testInfo);
         //////////////////////////////////////////////////////////////////////////////
 
@@ -228,9 +233,10 @@
         var _this = this;
         //计算北极熊跳跃次数
         JumpNum ++;
-        //当跳跃次数超过65次，加载终点浮冰
-        if(JumpNum >= 30){
+        //当跳跃次数超过50次，加载终点浮冰
+        if(JumpNum >= 2){
             if(!IsAddEndBin){
+                gameBins.addNewBin(JumpNum);
                 gameBins.addEndBinToStage();
                 IsAddEndBin = true;
             }
@@ -290,6 +296,13 @@
                 //计算浮冰盒子大小（此处大小并非浮冰元素实际大小，是截取浮冰中间区域的大小，以实现在显示效果上，需要北极熊双脚踩到浮冰才行）
                 //获取最终用于碰撞检测的盒子大小
                 Bin_TempInfo[index].boxInfo = returnBearBoxInfo(Bin_TempInfo[index]);
+
+                //最后的终点浮冰需要盒子高度单独处理一下
+                if(isExitsVariable(obj.myName)){
+                    if(obj.myName == 'end'){
+                        Bin_TempInfo[index].boxInfo.y += (Bin_TempInfo[index].height*0.15);
+                    }
+                }
             }, this);
         }
 
@@ -324,7 +337,8 @@
         if(Tween_t == Tween_d){
             Laya.timer.clear(this, bearJumpGoDown);
             Tween_t = 0;
-            console.log('游戏失败');
+            //console.log('游戏失败');
+            _proto.gameOver();
         }
     }
     //北极熊碰撞检测
@@ -366,7 +380,7 @@
             //剔除圣诞树
             if(!isExitsVariable(obj.myName)){
                 //剔除高于北极熊脚步的浮冰
-                if(Bin_TempInfo[index].boxInfo.y > tip_bear.y + Bear_BoxInfo.h){
+                if(Bin_TempInfo[index].boxInfo.y > tip_bear.y + Bear_BoxInfo.h && Bin_TempInfo[index].boxInfo.y < pageHeight + 50){
                     //console.log('计算：');
                     //boxContrast(Bin_TempInfo[index].boxInfo, );
                     if(!collisionOK){
@@ -451,7 +465,7 @@
                 
                 ///////////////////////////////////////////////////////////////
                 
-                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-10 <= spot.y && box.y >= spot.y){
+                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-11 <= spot.y && box.y >= spot.y){
                     return true;
                 }else{
                     return false;
@@ -505,9 +519,69 @@
                 tip_bear.x ++;
             }else if(tip_bear.x == endX){
                 Laya.timer.clear(this, tip_bear_xgo);
+                //加载背景图
+                tip_sea_box.graphics.clear();
+                tip_bg = new Sprite();
+                tip_bg.loadImage("res/images/tip_bg.jpg", 0, 0, pageWidth, pageHeight);
+                Laya.stage.addChild(tip_bg);
+                tip_bg.zOrder = -1;
+                EndBinInfo_Winner = gameBins.binStageArray[gameBins.binStageArray.length-1].getBounds();
+                Laya.timer.frameLoop(1, _this, winnerShow);
+
+                //换熊的图片
+                winner_bear = new Sprite();
+                winner_bear.loadImage("res/images/winner_bear.png",  pageWidth*0.45, tip_bear.y - endBinObj.height*0.39 , pageWidth*0.25, (pageWidth*0.25)*(234/167));
+                Laya.stage.addChild(winner_bear);
+                winner_bear.zOrder = 4;
+                tip_bear.clear();
             }
         }
-        
+
+        //胜利动画
+        function winnerShow(){
+            //console.log(gameBins.binStageArray[gameBins.binStageArray.length-1]);
+            game_bg.y += 4;
+            if (game_bg.y >= EndBinInfo_Winner.y + (EndBinInfo_Winner.height * 0.6)){
+                Laya.timer.clear(this, winnerShow);
+
+                //放烟花
+                Laya.loader.load("res/atlas/images/winner_yanhua.atlas", Laya.Handler.create(this, yanhuaPlay));
+                //海动画
+                function yanhuaPlay(){
+                    end_yanhua_1 = new Laya.Animation();
+                    end_yanhua_1.loadAnimation("res/ani/winner_yanhua.ani");
+                    Laya.stage.addChild(end_yanhua_1);
+                    end_yanhua_1.x = pageWidth * 0.65;
+                    end_yanhua_1.y = pageHeight * 0.18;
+                    end_yanhua_1.scale(0.7,0.7);
+                    end_yanhua_1.play();
+                    end_yanhua_1.zOrder = 2;
+
+                    end_yanhua_2 = new Laya.Animation();
+                    end_yanhua_2.loadAnimation("res/ani/winner_yanhua.ani");
+                    Laya.stage.addChild(end_yanhua_2);
+                    end_yanhua_2.x = pageWidth * 0.4;
+                    end_yanhua_2.y = pageHeight * 0.2;
+                    end_yanhua_2.scale(0.5,0.5);
+                    end_yanhua_2.play();
+                    end_yanhua_2.zOrder = 2;
+
+                    end_yanhua_3 = new Laya.Animation();
+                    end_yanhua_3.loadAnimation("res/ani/winner_yanhua.ani");
+                    Laya.stage.addChild(end_yanhua_3);
+                    end_yanhua_3.x = pageWidth * 0.85;
+                    end_yanhua_3.y = pageHeight * 0.26;
+                    end_yanhua_3.scale(0.4,0.4);
+                    end_yanhua_3.play();
+                    end_yanhua_3.zOrder = 2;
+                }
+            }
+        }
+    }
+
+    //游戏失败
+    _proto.gameOver = function(){
+        console.log('游戏失败');
     }
 
     //判断变量是否存在
