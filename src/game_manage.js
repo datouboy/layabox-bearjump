@@ -593,6 +593,8 @@
             popBG_Black.alpha += 0.01;
             if(popBG_Black.alpha >= 0.5){
                 Laya.timer.clear(this, popBG_BlackShow);
+                $('#winner_box_one').show();
+                $('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
             }
         }
     }
@@ -614,6 +616,8 @@
             popBG_Black.alpha += 0.01;
             if(popBG_Black.alpha >= 0.5){
                 Laya.timer.clear(this, popBG_BlackShow);
+                $('#gameover_box').show();
+                $('#gameover_box').css({'top':(pageHeight - $('#gameover_box').height())/2 + 'px'});
             }
         }
     }

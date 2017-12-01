@@ -1,0 +1,29 @@
+{
+    "frames": {
+        "winner_yanhua.png": {
+            "frame": {
+                "h": 200,
+                "idx": 0,
+                "w": 192,
+                "x": 0,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 200,
+                "w": 192
+            },
+            "spriteSourceSize": {
+                "h": 200,
+                "w": 192,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        }
+    },
+    "meta": {
+        "image": "winner_yanhua.png",
+        "prefix": "images/winner_yanhua/"
+    }
+}

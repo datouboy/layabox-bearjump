@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset='utf-8' />
-	<title>www.layabox.com</title>
+	<title>可口可乐</title>
 	<meta name='viewport' content='width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'
 	/>
 	<meta name="renderer" content="webkit">
@@ -14,8 +14,28 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta http-equiv='expires' content='0' />
 	<meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<style type="text/css">
+	body {position: relative;}
+	.popBox {width: 80%; position: absolute; z-index: 9; left: 10%; top:40px; background: url('./res/images/pop_box.png') left center no-repeat; background-size: 100%;}
+	.popBox:before {display: block; content: ''; width: 100%; height: 40px; background: url('./res/images/pop_box.png') left top no-repeat; background-size: 100%; position: absolute; left:0; top:-40px;}
+	.popBox:after {display: block; content: ''; width: 100%; height: 30px; background: url('./res/images/pop_box.png') left bottom no-repeat; background-size: 100%; position: absolute; left:0; bottom:-30px;}
+	.popBox .popBox_main {padding: 0 20px; color: #fff; font-size: 14px; text-align: center;}
+	.popBox .popBox_main h3,h4,p {padding: 3px 0; margin: 0;}
+	.popBox .popBox_main h3 {font-size: 18px;}
+	.popBox .popBox_main button[type=button] {border: none; background: #fff; height: 36px; line-height: 35px; border-radius: 18px; color:#f40009; font-weight: bold; padding: 0 25px; font-size: 16px;}
+	.popBox .popBox_main p.firstP {padding: 20px 0 10px 0;}
+	.popBox a.close {display: block; position: absolute; width: 30px; height: 59px; background: url('./res/images/pop_close.png') left center no-repeat; background-size: 100% 100%; right: 0; top: -70px;}
+
+	.formBox {width: 100%; position: absolute; z-index: 9; left:0; top:0; text-align: center; padding-top: 130px; color: #fff;}
+	.formBox h3 {font-size: 40px; line-height: 40px; padding: 0 0 20px 0; margin: 0;}
+	.formBox .inputBox {width: 80%; height: 40px; background: #fff; border-radius: 4px; margin: 20px auto;}
+	.formBox .inputBox input[type=text] {width: 90%; margin-top: 10px; border:none; font-size: 16px;}
+	.formBox button.submit {width: 130px; height: 43px; background: url('./res/images/form_submit.png') 0 0 no-repeat; background-size: 100% 100%; border:none;}
+	.formBox button.restart {width: 130px; height: 43px; background: url('./res/images/form_restart.png') 0 0 no-repeat; background-size: 100% 100%; border:none;}
+	</style>
 </head>
 <body>
+	<script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 	<!--核心包，封装了显示对象渲染，事件，时间管理，时间轴动画，缓动，消息交互,socket，本地存储，鼠标触摸，声音，加载，颜色滤镜，位图字体等-->
 	<script type="text/javascript" src="libs/laya.core.js"></script>
 	<!--封装了webgl渲染管线，如果使用webgl渲染，可以在初始化时调用Laya.init(1000,800,laya.webgl.WebGL);-->
@@ -41,7 +61,75 @@
 	<script src="../src/game_manage.js"></script>
 	<script src="../src/start.js"></script>
 	<script src="../src/tips.js"></script>
+	<script src="../src/winner_form.js"></script>
 	<script src="../src/HelloLayaBox.js"></script>
 	<!--jsfile--endTag-->
+	<!--胜利弹窗-->
+	<div class="popBox" id="winner_box_one" style="display: none;">
+		<div class="popBox_main">
+			<img style="width: 86%; margin-top: -30px;" src="./res/images/pop_icon.jpg">
+			<h3>恭喜你,成功通关！</h3>
+			<p>可口可乐祝你新年快乐！</p>
+			<h4>送你1个xx礼包~</h4>
+			<p>快来拆奖吧！</p>
+			<p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p>
+			<p><button type="button" id="goToShare">邀请好友来战</button></p>
+		</div>
+	</div>
+	<!--分享弹窗-->
+	<div class="popBox" id="winner_box_share" style="display: none;">
+		<a class="close" href="javascript:void(0)" id="closeShare"></a>
+		<div class="popBox_main">
+			<img style="width: 86%; margin-top: -80px; position: relative; z-index: 9;" src="./res/images/pop_icon_share.png">
+			<p>通关有奖励<br/>还不邀上好友一起~</p>
+		</div>
+	</div>
+	<!--表单弹窗-->
+	<div class="formBox" id="winner_form" style="display: none;">
+		<h3>xxxx</h3>
+		<div>提交你的信息，坐等奖品到家吧~</div>
+		<div class="inputBox"><input type="text" name="" placeholder="姓名" value=""></div>
+		<div class="inputBox"><input type="text" name="" placeholder="电话" value=""></div>
+		<div class="inputBox"><input type="text" name="" placeholder="地址" value=""></div>
+		<div style="padding-bottom: 10px;"><button type="button" class="submit"></button></div>
+		<div><button type="button" class="restart"></button></div>
+		<div style="font-size: 12px; padding-top: 100px;">*活动最终解释权归可口可乐乐在上海所有</div>
+	</div>
+	<!--胜利弹窗-->
+	<div class="popBox" id="gameover_box" style="display: none;">
+		<div class="popBox_main">
+			<img style="width: 86%; margin-top: -30px;" src="./res/images/pop_icon.jpg">
+			<h3>游戏失败！</h3>
+			<p>真可惜！</p>
+			<!-- <p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p>
+			<p><button type="button" id="goToShare">邀请好友来战</button></p> -->
+		</div>
+	</div>
+	<script type="text/javascript">
+	$(function($) {
+		var pageHeight = window.innerHeight;
+		$('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
+		$('#winner_box_share').css({'top':(pageHeight - $('#winner_box_share').height())/2 + 'px'});
+
+		$('#goToShare').click(function(){
+			$('#winner_box_one').hide();
+			$('#winner_box_share').show();
+			$('#winner_box_share').css({'top':(pageHeight - $('#winner_box_share').height())/2 + 'px'});
+		});
+
+		$('#closeShare').click(function(){
+			$('#winner_box_one').show();
+			$('#winner_box_share').hide();
+			$('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
+		});
+
+		$('#goToForm').click(function(){
+			$('#winner_box_one').hide();
+			$('#winner_box_share').hide();
+			Laya.winnerFormBg.init();
+			$('#winner_form').show();
+		});
+	});
+	</script>
 </body>
 </html>

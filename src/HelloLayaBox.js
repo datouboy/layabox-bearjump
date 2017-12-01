@@ -34,6 +34,9 @@
     function init(){
         //开始画面
         startPage_s = new startPage();
+        //加载胜利弹窗背景
+        winnerFormBg = new winnerForm();
+        Laya.winnerFormBg = winnerFormBg;
     }
 
 })();

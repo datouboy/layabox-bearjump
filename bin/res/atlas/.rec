@@ -35,6 +35,9 @@ P E466EB1C vslider$bar.png
 P 2BFF7046 vslider.png
 D images
 R 6530E43F .rec
+D images/form_bear
+P 8ABF1AC1 bear_1.png
+P B0620BB1 bear_2.png
 D images/start_bear
 P 848A4154 bear_body.png
 P A0BD41E3 bear_hand.png
