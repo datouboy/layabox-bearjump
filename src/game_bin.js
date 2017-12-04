@@ -81,9 +81,16 @@
         var _this = this;
 
         _this.binStageArray[n] = new Sprite();
+        _this.binStageArray[n].binType = getBinType();
         _this.binStageArray[n].pivotX = 0;
         _this.binStageArray[n].pivotY = 0;
-        _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[n].x, _this.binArray[n].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        if(_this.binStageArray[n].binType == 'super_1'){
+            _this.binStageArray[n].loadImage("res/images/game_bin2.png", _this.binArray[n].x, _this.binArray[n].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        }else if(_this.binStageArray[n].binType == 'super_2'){
+            _this.binStageArray[n].loadImage("res/images/game_bin3.png", _this.binArray[n].x, _this.binArray[n].y, pageWidth*0.3, (pageWidth*0.3)*(200/243));
+        }else{
+            _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[n].x, _this.binArray[n].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        }
         Laya.stage.addChild(_this.binStageArray[n]);
     }
 
@@ -101,11 +108,11 @@
 
         //最高浮冰的Y轴大于-100时，添加浮冰
         //添加浮冰的Y轴基数是Y轴位置最高的浮冰
-        if(smallBin_Y > -100){
+        if(smallBin_Y > -300){
             //生成初始化浮冰数组
             _this.binArray = [];
             var y = 0;
-            for(var i=0; i<=6; i++){
+            for(var i=0; i<=10; i++){
                 _this.addBinToArray();
             }
 
@@ -118,20 +125,27 @@
                 smallBin_Y = smallBin_Y - jiange;
                 obj.y = smallBin_Y;
                 var tn = n + index;
-                _this.addBinToStageFun(tn, index);
+                _this.addBinToStageFun(tn, obj);
             }, this);
             //console.log(_this.binStageArray);
         }
     }
 
     //添加浮冰至场景
-    _proto.addBinToStageFun = function(n,index){
+    _proto.addBinToStageFun = function(n, obj){
         var _this = this;
 
         _this.binStageArray[n] = new Sprite();
+        _this.binStageArray[n].binType = getBinType();
         _this.binStageArray[n].pivotX = 0;
         _this.binStageArray[n].pivotY = 0;
-        _this.binStageArray[n].loadImage("res/images/game_bin.png", _this.binArray[index].x, _this.binArray[index].y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        if(_this.binStageArray[n].binType == 'super_1'){
+            _this.binStageArray[n].loadImage("res/images/game_bin2.png", obj.x, obj.y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        }else if(_this.binStageArray[n].binType == 'super_2'){
+            _this.binStageArray[n].loadImage("res/images/game_bin3.png", obj.x, obj.y, pageWidth*0.3, (pageWidth*0.3)*(200/243));
+        }else{
+            _this.binStageArray[n].loadImage("res/images/game_bin.png", obj.x, obj.y, pageWidth*0.3, (pageWidth*0.3)*(112/243));
+        }
         Laya.stage.addChild(_this.binStageArray[n]);
     }
 
@@ -155,7 +169,20 @@
         _this.binStageArray[n].pivotY = 0;//-(pageWidth*0.85)*(584/632);
         _this.binStageArray[n].loadImage("res/images/end_di.png", 0, smallBin_Y - (Math.round(pageHeight * 0.25)*2), pageWidth*0.85, (pageWidth*0.85)*(584/632));
         Laya.stage.addChild(_this.binStageArray[n]);
+        _this.binStageArray[n].binType = 'default';
         _this.binStageArray[n].myName = 'end';
+    }
+
+    //随机输出浮冰的类型
+    function getBinType(){
+        var rNum = randomNum(0,5);
+        if(rNum == 5){
+            return 'super_1';//有可乐的浮冰1
+        }else if(rNum == 4){
+            return 'super_2';//有可乐的浮冰2
+        }else{
+            return 'default';//默认的浮冰
+        }
     }
 
     //生成从minNum到maxNum的随机数

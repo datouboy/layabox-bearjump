@@ -39,6 +39,7 @@
         //加载起跳点冰块
         start_di = new Sprite();
         start_di.loadImage("res/images/start_di.png", pageWidth*0.235, pageHeight*0.7, pageWidth*0.8, (pageWidth*0.8)*(357/639));
+        start_di.binType = 'default';
         Laya.stage.addChild(start_di);
 
         //加载标题

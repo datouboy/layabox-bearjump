@@ -27,6 +27,7 @@
     //碰撞检测所需的参数
     var Bear_BoxInfo = {}//记录北极熊碰撞Box的信息
     var Bin_TempInfo = [];//记录拉屏后浮冰的X、Y轴位置信息
+    var Bin_type = 'default';//踩到浮冰的类型，用于计算下一次起跳的高度
 
     var JumpNum = 0;//北极熊跳跃次数
     var IsAddEndBin = false;//是否已添加终点浮冰
@@ -253,6 +254,12 @@
         Tween_t = 0;
         console.log('北极熊跳跃执行');
         //计算跳跃的变化量
+        //跳跃变化量根据冰块类型做改变
+        if(Bin_type == 'default'){
+            JumpUpHeight = Math.round(pageHeight * 0.5);
+        }else{
+            JumpUpHeight = Math.round(pageHeight * 0.8);
+        }
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
             Tween_c = JumpUpHeight;
             pageBinDown = 0;
@@ -315,7 +322,12 @@
             binInfo.w = obj.width * 0.6;
             binInfo.h = 35;
             binInfo.x = obj.x + (obj.width * 0.2);
-            binInfo.y = obj.y - ((obj.height-35)/2);
+            if(!isExitsVariable(obj.myName)){
+                binInfo.y = obj.y - 10;
+            }else{
+                binInfo.y = obj.y - ((obj.height-35)/2);
+            }
+            
             return binInfo;
         }
     }
@@ -366,6 +378,7 @@
         new_y = Math.round(new_y);
         //性能优化、减少计算次数
         var collisionOK = false;
+        var okObj = null;
         gameBins.binStageArray.forEach(function(obj, index) {
             //判断是否是到了终点
             if(isExitsVariable(obj.myName)){
@@ -390,6 +403,7 @@
                         var collisionOK_c = collisionReturn(Bin_TempInfo[index].boxInfo, returnBearBox(tip_bear));
                         if(collisionOK_c){
                             collisionOK = true;
+                            okObj = obj;
                         }/*else{
                             //由于下落后期过快，北极熊会直接错过浮冰，需要计算补偿
                             //循环检测补偿的碰撞，每10像素检查
@@ -414,6 +428,13 @@
         }, this);
         if(collisionOK){
             console.log('检测到碰撞');
+            //写入本次踩到浮冰的类型
+            if(okObj != null){
+                if(isExitsVariable(okObj.binType)){
+                    Bin_type = okObj.binType;
+                }
+            }
+
             //中断北极熊下落循环
             Laya.timer.clear(_bearJumpGoDown_this, bearJumpGoDown);
             Tween_t = 0;
@@ -468,7 +489,7 @@
                 
                 ///////////////////////////////////////////////////////////////
                 
-                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-11 <= spot.y && box.y >= spot.y){
+                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-12 <= spot.y && box.y >= spot.y){
                     return true;
                 }else{
                     return false;
