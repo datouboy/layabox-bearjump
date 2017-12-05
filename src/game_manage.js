@@ -39,6 +39,7 @@
 
     var starObjArray = [];//跳跃动画五角星元素
     var lapingY = 0;//拉屏的实时Y，用来给五角星计算跳动下移的补偿
+    var bearSwitch_i = 0;//北极熊跳跃的贴图切换
 
     function gameManage() {
         var _this = this;
@@ -216,6 +217,7 @@
         Laya.stage.once(Event.CLICK, this, bearJumpStart);
         function bearJumpStart(){
             firstJump = false;
+            
             _this.bearJump();
         }
     }
@@ -261,6 +263,8 @@
         if(Bin_type == 'default'){
             JumpUpHeight = Math.round(pageHeight * 0.5);
         }else{
+            //带可乐的浮冰，切换北极熊造型
+            _this.bearJumpAnimationSwitch();
             JumpUpHeight = Math.round(pageHeight * 0.7);
         }
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
@@ -704,6 +708,19 @@
                 starObjArray[index].graphics.clear();
             }, this);
         }
+    }
+
+    //跳跃中北极熊的动画切换
+    _proto.bearJumpAnimationSwitch = function(){
+        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/Start_bear.ani"];
+        bearSwitch_i++;
+        if(bearSwitch_i > aniArray.length-1){
+            bearSwitch_i = 0;
+        }
+        tip_bear.clear();
+        tip_bear.loadAnimation(aniArray[bearSwitch_i]);
+        Laya.stage.addChild(tip_bear);
+        tip_bear.play();
     }
 
     //判断变量是否存在

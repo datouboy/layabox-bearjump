@@ -96,6 +96,7 @@
             //加载图集
             //加载图集成功后，执行onLoaded回调方法
             Laya.loader.load("res/atlas/images/tips_bear.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
+            Laya.loader.load("res/atlas/images/bear_jump.atlas");
         }
         //加载熊
         function stageAdd_tipbear_animate(){
@@ -126,6 +127,7 @@
                 var bearInfo = tip_bear.getBounds();
                 _proto.bearInfo.width  = bearInfo.width;
                 _proto.bearInfo.height = bearInfo.height;
+                //console.log(_proto.bearInfo);
             }
         }
 
