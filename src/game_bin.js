@@ -175,7 +175,7 @@
 
     //随机输出浮冰的类型
     function getBinType(){
-        var rNum = randomNum(0,5);
+        var rNum = randomNum(0,8);
         if(rNum == 5){
             return 'super_1';//有可乐的浮冰1
         }else if(rNum == 4){

@@ -37,6 +37,9 @@
 
     var popBG_Black;//弹框半透明黑框
 
+    var starObjArray = [];//跳跃动画五角星元素
+    var lapingY = 0;//拉屏的实时Y，用来给五角星计算跳动下移的补偿
+
     function gameManage() {
         var _this = this;
 
@@ -258,7 +261,7 @@
         if(Bin_type == 'default'){
             JumpUpHeight = Math.round(pageHeight * 0.5);
         }else{
-            JumpUpHeight = Math.round(pageHeight * 0.8);
+            JumpUpHeight = Math.round(pageHeight * 0.7);
         }
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
             Tween_c = JumpUpHeight;
@@ -338,6 +341,9 @@
             gameBins.binStageArray.forEach(function(obj, index) {
                 var binY = Tween.Cubic.easeOut(Tween_t, 0, pageBinDown, Tween_d);
                 gameBins.binStageArray[index].y = BinTempArray[index] + binY;
+                if(index == 0){
+                    lapingY = binY;
+                }
             }, this);
         }
     }
@@ -439,6 +445,9 @@
             Laya.timer.clear(_bearJumpGoDown_this, bearJumpGoDown);
             Tween_t = 0;
             if(!GameIsWin){
+                //跳起时的特效
+                _proto.bearJumpAnimation();
+                //北极熊再次跳起
                 _proto.bearJump();
             }
         }
@@ -643,6 +652,60 @@
         }
     }
 
+    //北极熊跳跃动画（闪耀的五角星）
+    _proto.bearJumpAnimation = function(){
+        var _this = this;
+        starObjArray = [];
+        //设置五角星圆心
+        /*
+            计算圆心坐标时候的奇怪问题！！！
+            这里的坐标有点奇怪，莫名奇妙的翻倍了，百思不得其解，只能暂时先除2来解决，还不清楚具体原因
+        */
+        //console.log(tipsPages);tipsPages.bearInfo.width
+        var oPoint = {
+            ox : tip_bear.x/2 + tipsPages.bearInfo.width*0.13,
+            oy : tip_bear.y/2 - tipsPages.bearInfo.height*0.1,
+        }
+        //console.log(tip_bear.width);
+        //生成每个五角星的最终坐标点，生成10个10五角星
+        var endPointArray = getPoint(pageWidth * 0.15, oPoint.ox, oPoint.oy, 10);
+        var initObj = [];//每个五角星的所需运动值
+        endPointArray.forEach(function(obj, index) {
+            starObjArray[index] = new Sprite();
+            starObjArray[index].pivotX = 0;
+            starObjArray[index].pivotY = 0;
+            starObjArray[index].loadImage("res/images/star.png", oPoint.ox, oPoint.oy, 6, 6);
+            Laya.stage.addChild(starObjArray[index]);
+            starObjArray[index].zOrder = 9;
+            initObj[index] = {
+                x_move : obj.x-oPoint.ox,
+                y_move : obj.y-oPoint.oy
+            }
+        }, this);
+        //动画
+        var a_t = 0;
+        var a_d = 36;
+        Laya.timer.frameLoop(1, _this, starShow);
+        function starShow(){
+            a_t += 1;
+            starObjArray.forEach(function(obj, index) {
+                obj.x = Tween.Quad.easeIn(a_t, oPoint.ox, initObj[index].x_move, a_d);
+                obj.y = Tween.Quad.easeIn(a_t, oPoint.oy, initObj[index].y_move, a_d) + lapingY;
+            }, this);
+            if(a_t == a_d){
+                Laya.timer.clear(_this, starShow);
+                //删除所有五角星元素
+                delStar();
+            }
+        }
+        //删除所有五角星元素
+        function delStar(){
+            starObjArray.forEach(function(obj, index) {
+                starObjArray[index].graphics.clear();
+            }, this);
+        }
+    }
+
     //判断变量是否存在
     function isExitsVariable(variableName) {
         try {
@@ -653,6 +716,25 @@
             }
         } catch(e) {}
         return false;
+    }
+
+    /*
+    * 求圆周上等分点的坐标
+    * ox,oy为圆心坐标
+    * r为半径
+    * count为等分个数
+    */
+    function getPoint(r, ox, oy, count){
+        var point = []; //结果
+        var radians = (Math.PI / 180) * Math.round(360 / count), //弧度
+            i = 0;
+        for(; i < count; i++){
+            var x = ox + r * Math.sin(radians * i),
+                y = oy + r * Math.cos(radians * i);
+
+            point.unshift({x:x,y:y}); //为保持数据顺时针
+        }
+        return point;
     }
 
 })();

@@ -1,0 +1,6 @@
+{
+    "type":"View",
+    "props":{"sceneWidth":200,"sceneHeight":200,"sceneColor":"#000000"},
+    "child":[
+        ]
+}
