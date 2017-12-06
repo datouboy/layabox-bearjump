@@ -49,6 +49,32 @@
 		Laya.loader.load(assets, Handler.create(this, init),  Handler.create(this, onLoading, null, false), Loader.TEXT);
         // 侦听加载失败
 		Laya.loader.on(Event.ERROR, this, onError);
+        //绘制进度条
+        loadBG = new Sprite();
+        Laya.stage.addChild(loadBG);
+        var path =  [
+            ["moveTo", 8, 0], //画笔的起始点，
+            ["arcTo", 0, 0, 0, 8, 8], //p1（500,0）为夹角B，（500,30）为端点p2
+            ["arcTo", 0, 16, 8, 16, 8],
+            ["lineTo", 200, 16],
+            ["arcTo", 208, 16, 208, 8, 8],
+            ["arcTo", 208, 0, 200, 0, 8],
+            ["lineTo", 8, 0]
+        ];
+        //绘制圆角矩形
+        loadBG.graphics.drawPath((pageWidth-208)/2, Math.round(pageHeight/2.5) - 10, path, {fillStyle: "#cbefff"});
+        loadTiao = new Sprite();
+        Laya.stage.addChild(loadTiao);
+        var path =  [
+            ["moveTo", 4, 0], //画笔的起始点，
+            ["arcTo", 0, 0, 0, 4, 4], //p1（500,0）为夹角B，（500,30）为端点p2
+            ["arcTo", 0, 8, 4, 8, 4],
+            ["lineTo", 4, 8],
+            ["arcTo", 8, 8, 8, 4, 4],
+            ["arcTo", 8, 0, 4, 0, 4],
+            ["lineTo", 4, 0]
+        ];
+        loadTiao.graphics.drawPath((pageWidth-208)/2 + 4, Math.round(pageHeight/2.5) - 6, path, {fillStyle: "#4892b3"});
         //init();
 	})();
 
@@ -66,7 +92,29 @@
 	function onLoading(progress)
 	{
         progress = Math.round(progress * 100);
-		console.log("加载进度: " + progress);
+		//console.log("加载进度: " + progress);
+        //loadTiao.graphics.clear();
+        var OnePercent = (192 - 4)/100;//每百分之一进度的距离
+        var addPercent = Math.round(progress * OnePercent);//需要增加的百分比
+        /*var path =  [
+            ["moveTo", 4, 0], //画笔的起始点，
+            ["arcTo", 0, 0, 0, 4, 4], //p1（500,0）为夹角B，（500,30）为端点p2
+            ["arcTo", 0, 8, 4, 8, 4],
+            ["lineTo", 192, 8],
+            ["arcTo", 200, 8, 200, 4, 4],
+            ["arcTo", 200, 0, 192, 0, 4],
+            ["lineTo", 4, 0]
+        ];*/
+        var path =  [
+            ["moveTo", 4, 0], //画笔的起始点，
+            ["arcTo", 0, 0, 0, 4, 4], //p1（500,0）为夹角B，（500,30）为端点p2
+            ["arcTo", 0, 8, 4, 8, 4],
+            ["lineTo", 4+addPercent, 8],
+            ["arcTo", 8+addPercent, 8, 8+addPercent, 4, 4],
+            ["arcTo", 8+addPercent, 0, 4+addPercent, 0, 4],
+            ["lineTo", 4, 0]
+        ];
+        loadTiao.graphics.drawPath((pageWidth-208)/2 + 4, Math.round(pageHeight/2.5) - 6, path, {fillStyle: "#4892b3"});
 	}
 
     //打印加载失败日志
