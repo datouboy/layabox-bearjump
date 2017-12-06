@@ -148,11 +148,18 @@
     function onOrientationChange(event) {
         //////////////////////////////////////////////////////////////////////////////
         //陀螺仪测试数据
+        /*
+        var isIphoneT = 'no';
+        if(isIphone()){
+            isIphoneT = 'yes';
+        }
         testInfo.text = 
         "alpha:" + Math.floor(event.alpha) + '\n' +//左右旋转
         "beta :" + Math.floor(event.beta) + '\n' +//前后旋转
         "gamma:" + Math.floor(event.gamma) + '\n' +//扭转设备
-        "Jump Num:" + JumpNum;
+        "Jump Num:" + JumpNum + '\n' +
+        "is Iphone:" + isIphoneT
+        */
         //////////////////////////////////////////////////////////////////////////////
 
         //判断左右和扭转值，取大的值发送给北极熊移动
@@ -163,7 +170,7 @@
         }
         var gamma = Math.abs(event.gamma);
 
-        if(alpha >= gamma){
+        if(alpha >= gamma && isIphone()){
             _proto.bearXMove(event.alpha, 'alpha');
         }else{
             _proto.bearXMove(event.gamma, 'gamma');
@@ -753,5 +760,14 @@
         }
         return point;
     }
+
+    //判断是否是iphone
+    function isIphone(){
+        if(/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)){
+            return true;
+        }else{
+            return false;
+        }
+    };
 
 })();
