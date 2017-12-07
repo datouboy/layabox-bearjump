@@ -564,7 +564,8 @@
         tip_bear.y = endBinObj.y - (endBinObj.height*0.22);
         //tip_bear.x = pageWidth * 0.4;
         Laya.timer.frameLoop(1, _this, tip_bear_xgo);
-
+        //切换北极熊造型
+        _this.bearJumpAnimationSwitchByN(0);
         //熊动画
         function tip_bear_xgo(){
             tip_bear.x = Math.round(tip_bear.x);
@@ -707,7 +708,7 @@
             starObjArray[index].loadImage("res/images/star.png", oPoint.ox, oPoint.oy, starWidth, starWidth);
             Laya.stage.addChild(starObjArray[index]);
             starObjArray[index].zOrder = 9;
-            starObjArray[index].alpha = starAlpha;
+            starObjArray[index].alpha = 0;
             initObj[index] = {
                 x_move : obj.x-oPoint.ox,
                 y_move : obj.y-oPoint.oy
@@ -720,6 +721,9 @@
         function starShow(){
             a_t += 1;
             starObjArray.forEach(function(obj, index) {
+                if (a_t > 10){
+                    obj.alpha = starAlpha;
+                }
                 obj.x = Tween.Quad.easeIn(a_t, oPoint.ox, initObj[index].x_move, a_d);
                 obj.y = Tween.Quad.easeIn(a_t, oPoint.oy, initObj[index].y_move, a_d) + lapingY;
             }, this);
