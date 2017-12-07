@@ -22,10 +22,10 @@
 
 ---
 
-![print](./print/pci_1.jpg)
-![print](./print/pci_2.jpg)
-![print](./print/pci_3.jpg)
-![print](./print/pci_4.jpg)
+![print](./print/pic_1.jpg)
+![print](./print/pic_2.jpg)
+![print](./print/pic_3.jpg)
+![print](./print/pic_4.jpg)
 
 ---
 
