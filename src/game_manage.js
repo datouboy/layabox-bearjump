@@ -224,7 +224,6 @@
         Laya.stage.once(Event.CLICK, this, bearJumpStart);
         function bearJumpStart(){
             firstJump = false;
-            
             _this.bearJump();
         }
     }
@@ -271,7 +270,7 @@
             JumpUpHeight = Math.round(pageHeight * 0.5);
         }else{
             //带可乐的浮冰，切换北极熊造型
-            _this.bearJumpAnimationSwitch();
+            //_this.bearJumpAnimationSwitch();
             JumpUpHeight = Math.round(pageHeight * 0.7);
         }
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
@@ -396,6 +395,8 @@
         //性能优化、减少计算次数
         var collisionOK = false;
         var okObj = null;
+        //踩冰动画时间
+        var stepIceTime = 0;
         gameBins.binStageArray.forEach(function(obj, index) {
             //判断是否是到了终点
             if(isExitsVariable(obj.myName)){
@@ -421,24 +422,7 @@
                         if(collisionOK_c){
                             collisionOK = true;
                             okObj = obj;
-                        }/*else{
-                            //由于下落后期过快，北极熊会直接错过浮冰，需要计算补偿
-                            //循环检测补偿的碰撞，每10像素检查
-                            for(var i=0; i<=new_y - old_y; i=i+10){
-                                var BearBoxInfo = {
-                                    w : Bear_BoxInfo.w,
-                                    h : Bear_BoxInfo.h,
-                                    x : tip_bear.x + 10,
-                                    y : old_y + i,
-                                }
-                                collisionOK_c = collisionReturn(Bin_TempInfo[index].boxInfo, BearBoxInfo);
-                                if(collisionOK_c){
-                                    collisionOK = true;
-                                    console.log('qweqweqweqweqweqwe');
-                                    break;
-                                }
-                            }
-                        }*/
+                        }
                     }
                 }
             }
@@ -456,10 +440,38 @@
             Laya.timer.clear(_bearJumpGoDown_this, bearJumpGoDown);
             Tween_t = 0;
             if(!GameIsWin){
-                //跳起时的特效
-                _proto.bearJumpAnimation();
-                //北极熊再次跳起
-                _proto.bearJump();
+                //执行踩冰动画，并起跳北极熊
+                stepIceTime = 0;
+                Laya.timer.frameLoop(1, this, stepIceAnimation);
+                //切换北极熊造型
+                _proto.bearJumpAnimationSwitchByN(0);
+                //跳起时的特效(闪耀的五角星)
+                if(Bin_type == 'default'){
+                    _proto.bearJumpAnimation('default');
+                }else{
+                    _proto.bearJumpAnimation('super');
+                }
+                
+            }
+        }
+
+        //踩冰动画
+        function stepIceAnimation(){
+            stepIceTime ++;
+            if(okObj != null){
+                if(stepIceTime <= 4){
+                    okObj.y += 3.5;
+                    tip_bear.y += 3.5;
+                }else if(stepIceTime > 4 && stepIceTime < 8){
+                    okObj.y -= 3.5;
+                    tip_bear.y -= 3.5;
+                }else{
+                    Laya.timer.clear(this, stepIceAnimation);
+                    //换回北极熊造型
+                    _proto.bearJumpAnimationSwitchByN(1);
+                    //北极熊再次跳起
+                    _proto.bearJump();
+                }
             }
         }
 
@@ -664,7 +676,14 @@
     }
 
     //北极熊跳跃动画（闪耀的五角星）
-    _proto.bearJumpAnimation = function(){
+    _proto.bearJumpAnimation = function(type){
+        if(type == 'default'){
+            var starWidth = 6;
+            var starAlpha = 0.6;
+        }else{
+            var starWidth = 9;
+            var starAlpha = 1;
+        }
         var _this = this;
         starObjArray = [];
         //设置五角星圆心
@@ -685,9 +704,10 @@
             starObjArray[index] = new Sprite();
             starObjArray[index].pivotX = 0;
             starObjArray[index].pivotY = 0;
-            starObjArray[index].loadImage("res/images/star.png", oPoint.ox, oPoint.oy, 6, 6);
+            starObjArray[index].loadImage("res/images/star.png", oPoint.ox, oPoint.oy, starWidth, starWidth);
             Laya.stage.addChild(starObjArray[index]);
             starObjArray[index].zOrder = 9;
+            starObjArray[index].alpha = starAlpha;
             initObj[index] = {
                 x_move : obj.x-oPoint.ox,
                 y_move : obj.y-oPoint.oy
@@ -726,6 +746,15 @@
         }
         tip_bear.clear();
         tip_bear.loadAnimation(aniArray[bearSwitch_i]);
+        Laya.stage.addChild(tip_bear);
+        tip_bear.play();
+    }
+
+    //跳跃中北极熊的动画切换
+    _proto.bearJumpAnimationSwitchByN = function(n){
+        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/Start_bear.ani"];
+        tip_bear.clear();
+        tip_bear.loadAnimation(aniArray[n]);
         Laya.stage.addChild(tip_bear);
         tip_bear.play();
     }
