@@ -21,6 +21,8 @@
 	(function(){
 		// 不支持WebGL时自动切换至Canvas
 		Laya.init(Browser.clientWidth, Browser.clientHeight, WebGL);
+        //性能统计面板的调用
+        //Laya.Stat.show(0,0);
 
 		Laya.stage.alignV = Stage.ALIGN_MIDDLE;
 		Laya.stage.alignH = Stage.ALIGN_CENTER;

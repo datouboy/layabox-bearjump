@@ -131,7 +131,7 @@
         var _this = this;
         
         //////////////////////////////////////////////////////////////////////////////
-        //陀螺仪测试数据
+        /*/陀螺仪测试数据
         testInfo = new Text();
         testInfo.fontSize = 12;
         testInfo.color = "#000000";
@@ -140,7 +140,7 @@
         testInfo.alpha = 0.5;
         Laya.stage.addChild(testInfo);
         testInfo.zOrder = 99;
-        //////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////*/
 
         window.addEventListener("deviceorientation", onOrientationChange, false);
     }
@@ -336,7 +336,7 @@
             binInfo.h = 35;
             binInfo.x = obj.x + (obj.width * 0.2);
             if(!isExitsVariable(obj.myName)){
-                binInfo.y = obj.y - 10;
+                binInfo.y = obj.y;
             }else{
                 binInfo.y = obj.y - ((obj.height-35)/2);
             }
@@ -462,7 +462,7 @@
                 if(stepIceTime <= 4){
                     okObj.y += 3.5;
                     tip_bear.y += 3.5;
-                }else if(stepIceTime > 4 && stepIceTime < 8){
+                }else if(stepIceTime > 4 && stepIceTime <= 8){
                     okObj.y -= 3.5;
                     tip_bear.y -= 3.5;
                 }else{
@@ -517,11 +517,11 @@
                 Laya.stage.addChild(qqsp2);
                 qqsp2.graphics.drawRect(spot.x, spot.y, 2, 2, "#ff0000");
                 qqsp2.zOrder = 11;
-                */
+                //*/
                 
                 ///////////////////////////////////////////////////////////////
                 
-                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-12 <= spot.y && box.y >= spot.y){
+                if(spot.x >= box.x && spot.x <= box.x+box.w && box.y-box.h-13 <= spot.y && box.y >= spot.y){
                     return true;
                 }else{
                     return false;

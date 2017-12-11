@@ -95,14 +95,14 @@
 		<div><button type="button" class="restart"></button></div>
 		<div style="font-size: 12px; padding-top: 100px;">*活动最终解释权归可口可乐乐在上海所有</div>
 	</div>
-	<!--胜利弹窗-->
+	<!--失败弹窗-->
 	<div class="popBox" id="gameover_box" style="display: none;">
 		<div class="popBox_main">
 			<img style="width: 86%; margin-top: -30px;" src="./res/images/pop_icon.jpg">
 			<h3>游戏失败！</h3>
 			<p>真可惜！</p>
-			<!-- <p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p>
-			<p><button type="button" id="goToShare">邀请好友来战</button></p> -->
+			<!-- <p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p> -->
+			<p><button type="button" id="goToRestart">再玩一次</button></p>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -128,6 +128,11 @@
 			$('#winner_box_share').hide();
 			Laya.winnerFormBg.init();
 			$('#winner_form').show();
+		});
+
+		$('#goToRestart').click(function(){
+			//$('#gameover_box').hide();
+			window.location.reload();
 		});
 	});
 	</script>
