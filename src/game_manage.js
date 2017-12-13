@@ -249,7 +249,7 @@
         //计算北极熊跳跃次数
         JumpNum ++;
         //当跳跃次数超过50次，加载终点浮冰
-        if(JumpNum >= 50){
+        if(JumpNum >= 10){
             if(!IsAddEndBin){
                 gameBins.addNewBin(JumpNum);
                 gameBins.addEndBinToStage();
@@ -658,13 +658,36 @@
         var _this = this;
         //移除陀螺仪监听事件
         window.removeEventListener("deviceorientation", onOrientationChange, false);
+        //落水动画
+        over_shui = new Sprite();
+        over_shui.loadImage("res/images/over_shui.png", tip_bear.x-pageWidth*0.105, pageHeight-(pageHeight*0.18)+60, pageWidth*0.4, pageWidth*0.4*(3/4));
+        Laya.stage.addChild(over_shui);
+        over_shui.pivot(0, 0);
+        over_shui.zOrder = 9;
+        over_shui.alpha = 0;
+        Laya.timer.frameLoop(1, _this, gameOverShui);
+        var tempTime = 0;
+        function gameOverShui(){
+            over_shui.y -= 6;
+            tip_bear.y += 13;
+            tip_bear.alpha -= 0.1;
+            over_shui.alpha += 0.1;
+            if(tempTime >= 10){
+                Laya.timer.clear(this, gameOverShui);
+                //打开弹窗
+                openPop();
+            }
+            tempTime ++;
+        }
         //加载弹窗背景
-        popBG_Black = new Sprite();
-        Laya.stage.addChild(popBG_Black);
-        popBG_Black.graphics.drawRect(0, 0, pageWidth, pageHeight, "#000000");
-        popBG_Black.alpha = 0;
-        popBG_Black.zOrder = 9;
-        Laya.timer.frameLoop(1, _this, popBG_BlackShow);
+        function openPop(){
+            popBG_Black = new Sprite();
+            Laya.stage.addChild(popBG_Black);
+            popBG_Black.graphics.drawRect(0, 0, pageWidth, pageHeight, "#000000");
+            popBG_Black.alpha = 0;
+            popBG_Black.zOrder = 9;
+            Laya.timer.frameLoop(1, _this, popBG_BlackShow);
+        }
         //半透明黑背景
         function popBG_BlackShow(){
             popBG_Black.alpha += 0.01;
