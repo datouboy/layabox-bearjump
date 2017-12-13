@@ -8,6 +8,7 @@
 	var Handler = Laya.Handler;
 	var WebGL   = Laya.WebGL;
     var Event   = Laya.Event;
+    var SoundManager = Laya.SoundManager;
 
     var pageWidth  = Browser.clientWidth;
     var pageHeight = Browser.clientHeight;
@@ -249,7 +250,7 @@
         //计算北极熊跳跃次数
         JumpNum ++;
         //当跳跃次数超过50次，加载终点浮冰
-        if(JumpNum >= 10){
+        if(JumpNum >= 40){
             if(!IsAddEndBin){
                 gameBins.addNewBin(JumpNum);
                 gameBins.addEndBinToStage();
@@ -433,6 +434,8 @@
             if(okObj != null){
                 if(isExitsVariable(okObj.binType)){
                     Bin_type = okObj.binType;
+                    //播放音效
+                    onPlaySound();
                 }
             }
 
@@ -551,6 +554,11 @@
                 y : bearInfo.y,
             }
             return BearBox;
+        }
+
+        //播放弹跳音效
+        function onPlaySound(){
+            SoundManager.playSound("res/sounds/tan.mp3", 1);
         }
     }
 

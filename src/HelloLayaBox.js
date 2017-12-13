@@ -48,9 +48,17 @@
                 type: Loader.ATLAS
             });
         }, this);
+        //加载音效
+        assets.push({
+                url: 'res/sounds/tan.mp3',
+                type: Loader.SOUND
+            });
+        //加载
 		Laya.loader.load(assets, Handler.create(this, init),  Handler.create(this, onLoading, null, false), Loader.TEXT);
         // 侦听加载失败
 		Laya.loader.on(Event.ERROR, this, onError);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //绘制进度条
         loadBG = new Sprite();
         Laya.stage.addChild(loadBG);
