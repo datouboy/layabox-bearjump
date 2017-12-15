@@ -32,7 +32,7 @@
 
         //加载静态文件资源
         var imgArray = ['end_di.png', 'form_bg.jpg', 'form_restart.png', 'form_submit.png', 'form_title.png', 'game_bg.jpg', 'game_bin.png', 'game_bin2.png', 'game_bin3.png', 'pop_box.png', 'pop_close.png', 'pop_icon.jpg', 'pop_icon_share.png', 'star.png', 'start_bg.jpg', 'start_bin.png', 'start_di.png', 'start_menu.png', 'start_title.png', 'start_tree.png', 'tip_bg.jpg', 'winner_bear.png', 'over_shui.png'];
-        var atlasArray = ['bear_jump.atlas', 'form_bear.atlas', 'start_bear.atlas', 'tips_bear.atlas', 'tips_sea.atlas', 'tips_tipbox.atlas', 'winner_yanhua.atlas'];
+        var atlasArray = ['bear_jump.atlas', 'bear_jump2.atlas', 'form_bear.atlas', 'start_bear.atlas', 'tips_bear.atlas', 'tips_sea.atlas', 'tips_tipbox.atlas', 'winner_yanhua.atlas'];
         var assets = [];
         //图片
         imgArray.forEach(function(val) {

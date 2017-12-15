@@ -269,10 +269,14 @@
         //跳跃变化量根据冰块类型做改变
         if(Bin_type == 'default'){
             JumpUpHeight = Math.round(pageHeight * 0.5);
-        }else{
-            //带可乐的浮冰，切换北极熊造型
+        }else if(Bin_type == 'super_1'){
+            //带可乐的浮冰(瓶盖)，切换北极熊造型
             //_this.bearJumpAnimationSwitch();
             JumpUpHeight = Math.round(pageHeight * 0.7);
+        }else if(Bin_type == 'super_2'){
+            //带可乐的浮冰（一瓶可乐），切换北极熊造型
+            //_this.bearJumpAnimationSwitch();
+            JumpUpHeight = Math.round(pageHeight * 0.9);
         }
         if(tip_bear.y - JumpUpLine >= JumpUpHeight){//未超过跳跃停止线
             Tween_c = JumpUpHeight;
@@ -471,7 +475,11 @@
                 }else{
                     Laya.timer.clear(this, stepIceAnimation);
                     //换回北极熊造型
-                    _proto.bearJumpAnimationSwitchByN(1);
+                    if(Bin_type == 'super_2'){
+                        _proto.bearJumpAnimationSwitchByN(2);
+                    }else{
+                        _proto.bearJumpAnimationSwitchByN(1);
+                    }
                     //北极熊再次跳起
                     _proto.bearJump();
                 }
@@ -787,7 +795,7 @@
 
     //跳跃中北极熊的动画切换
     _proto.bearJumpAnimationSwitchByN = function(n){
-        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/Start_bear.ani"];
+        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/bear_jump2.ani", "res/ani/Start_bear.ani"];
         tip_bear.clear();
         tip_bear.loadAnimation(aniArray[n]);
         Laya.stage.addChild(tip_bear);

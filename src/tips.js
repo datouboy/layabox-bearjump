@@ -95,8 +95,17 @@
         function add_bear(){
             //加载图集
             //加载图集成功后，执行onLoaded回调方法
-            Laya.loader.load("res/atlas/images/tips_bear.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
-            Laya.loader.load("res/atlas/images/bear_jump.atlas");
+            //Laya.loader.load("res/atlas/images/tips_bear.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
+            Laya.loader.load("res/atlas/images/tips_bear.atlas", Laya.Handler.create(this, stageAdd_bear_jump));
+
+            function stageAdd_bear_jump(){
+                Laya.loader.load("res/atlas/images/bear_jump.atlas", Laya.Handler.create(this, stageAdd_bear_jump2));
+            }
+
+            function stageAdd_bear_jump2(){
+                Laya.loader.load("res/atlas/images/bear_jump2.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
+            }
+            
         }
         //加载熊
         function stageAdd_tipbear_animate(){
