@@ -1,0 +1,134 @@
+{
+    "frames": {
+        "01.png": {
+            "frame": {
+                "h": 259,
+                "idx": 0,
+                "w": 102,
+                "x": 343,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 259,
+                "w": 102
+            },
+            "spriteSourceSize": {
+                "h": 259,
+                "w": 102,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "02.png": {
+            "frame": {
+                "h": 220,
+                "idx": 0,
+                "w": 149,
+                "x": 193,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 220,
+                "w": 149
+            },
+            "spriteSourceSize": {
+                "h": 220,
+                "w": 149,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "03.png": {
+            "frame": {
+                "h": 255,
+                "idx": 0,
+                "w": 192,
+                "x": 0,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 255,
+                "w": 192
+            },
+            "spriteSourceSize": {
+                "h": 255,
+                "w": 192,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear_02.png": {
+            "frame": {
+                "h": 17,
+                "idx": 0,
+                "w": 70,
+                "x": 0,
+                "y": 293
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 17,
+                "w": 70
+            },
+            "spriteSourceSize": {
+                "h": 17,
+                "w": 70,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear_03.png": {
+            "frame": {
+                "h": 44,
+                "idx": 0,
+                "w": 129,
+                "x": 321,
+                "y": 260
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 44,
+                "w": 129
+            },
+            "spriteSourceSize": {
+                "h": 44,
+                "w": 129,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear_04.png": {
+            "frame": {
+                "h": 71,
+                "idx": 0,
+                "w": 127,
+                "x": 193,
+                "y": 221
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 71,
+                "w": 127
+            },
+            "spriteSourceSize": {
+                "h": 71,
+                "w": 127,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        }
+    },
+    "meta": {
+        "image": "bear_jump2.png",
+        "prefix": "images/bear_jump2/"
+    }
+}

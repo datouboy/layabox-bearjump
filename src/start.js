@@ -18,6 +18,9 @@
     //树的放大比计算基数
     var start_tree_big = 1;
 
+    //弹窗背景
+    var popBG_Black;
+
     function startPage() {
         var _this = this;
         _this.startInit();
@@ -65,10 +68,25 @@
 
         //加载按钮
         start_startMenu = new Sprite();
-        start_startMenu.loadImage("res/images/start_menu.png", pageWidth*0.3, pageHeight*0.5, pageWidth*0.4, (pageWidth*0.3)*(130/295));
+        start_startMenu.loadImage("res/images/start_menu.png");
+        start_startMenu.x = pageWidth*0.3;
+        start_startMenu.y = pageHeight*0.5;
+        start_startMenu.scaleX = (pageWidth*0.4)/295;
+        start_startMenu.scaleY = (pageWidth*0.4)/295;
         Laya.stage.addChild(start_startMenu);
         //监听事件，此侦听事件响应一次后则自动移除侦听
         start_startMenu.once(Event.CLICK, this, onGameStartClick);
+
+        //加载活动规则按钮
+        start_tgMenu = new Sprite();
+        start_tgMenu.loadImage("res/images/tg_text.png");
+        start_tgMenu.x = pageWidth*0.76;
+        start_tgMenu.y = pageHeight*0.95;
+        start_tgMenu.scaleX = (pageWidth*0.2)/110;
+        start_tgMenu.scaleY = (pageWidth*0.2)/110;
+        Laya.stage.addChild(start_tgMenu);
+        //监听事件，此侦听事件响应一次后则自动移除侦听
+        start_tgMenu.on(Event.CLICK, this, onTgOpen);
 
         //加载熊
         //加载图集成功后，执行onLoaded回调方法
@@ -144,6 +162,7 @@
             //删除元素
             start_title.graphics.clear();
             start_startMenu.graphics.clear();
+            start_tgMenu.graphics.clear();
             start_bear.clear();
 
             //加载tips页面
@@ -157,6 +176,35 @@
             //删除循环
             Laya.timer.clear(_this, startAllImgDel);
         }
+    }
+    //打开活动规则
+    function onTgOpen(e){
+        var _this = this;
+        openPop();
+        $('#box_tg').show();
+		$('#box_tg').css({'top':(pageHeight - $('#box_tg').height())/2 + 'px'});
+
+        //加载弹窗背景
+        function openPop(){
+            popBG_Black = new Sprite();
+            Laya.stage.addChild(popBG_Black);
+            popBG_Black.graphics.drawRect(0, 0, pageWidth, pageHeight, "#000000");
+            popBG_Black.alpha = 0;
+            popBG_Black.zOrder = 9;
+            Laya.timer.frameLoop(1, _this, popBG_BlackShow);
+        }
+        //半透明黑背景
+        function popBG_BlackShow(){
+            popBG_Black.alpha += 0.05;
+            if(popBG_Black.alpha >= 0.5){
+                Laya.timer.clear(this, popBG_BlackShow);
+            }
+        }
+    }
+    //关闭弹窗背景
+    _proto.closePop = function(){
+        var _this = this;
+        popBG_Black.graphics.clear();
     }
 
 })();

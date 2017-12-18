@@ -151,6 +151,18 @@
 			<p><button type="button" id="goToRestart">再玩一次</button></p>
 		</div>
 	</div>
+	<!--活动规则-->
+	<div class="popBox" id="box_tg" style="display: none;">
+		<a class="close" href="javascript:void(0)" id="closeTg"></a>
+		<div class="popBox_main">
+			<img style="width: 66%; margin-top: -80px; position: relative; z-index: 9;" src="./res/images/pop_icon_tg.png">
+			<p style="padding-top: 20px;">活动时间：<br/>2017年12月22日-2018年1月10日<p>
+			<p>游戏机制：<br/>通过重力感应左右倾斜手机，帮助北极熊跳过浮冰回家过新年，即可参与拆礼包，获得可口可乐新年礼物。</p>
+			<p>奖品设置：<br/>666元可口可乐优惠券、可口可乐欢乐餐厅门票2张、可口可乐冬日礼盒</p>
+			<br/><br/>
+			<p><button type="button" id="closeTg2">确认</button></p>
+		</div>
+	</div>
 	<script type="text/javascript">
 	$(function($) {
 		var pageHeight = window.innerHeight;
@@ -174,6 +186,15 @@
 			$('#winner_box_share').hide();
 			Laya.winnerFormBg.init();
 			$('#winner_form').show();
+		});
+
+		$('#closeTg').click(function(){
+			$('#box_tg').hide();
+			Laya.startPage_s.closePop();
+		});
+		$('#closeTg2').click(function(){
+			$('#box_tg').hide();
+			Laya.startPage_s.closePop();
 		});
 
 		$('#goToRestart').click(function(){

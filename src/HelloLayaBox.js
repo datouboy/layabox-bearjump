@@ -93,6 +93,7 @@
         console.log('初始化游戏');
         //开始画面
         startPage_s = new startPage();
+        Laya.startPage_s = startPage_s;
         //加载胜利弹窗背景
         winnerFormBg = new winnerForm();
         Laya.winnerFormBg = winnerFormBg;
