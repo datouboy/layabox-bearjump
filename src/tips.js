@@ -103,7 +103,7 @@
             }
 
             function stageAdd_bear_jump2(){
-                Laya.loader.load("res/atlas/images/bear_jump2.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
+                Laya.loader.load("res/atlas/images/bear_jump3.atlas", Laya.Handler.create(this, stageAdd_tipbear_animate));
             }
             
         }

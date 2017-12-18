@@ -85,7 +85,7 @@
         start_tgMenu.scaleX = (pageWidth*0.2)/110;
         start_tgMenu.scaleY = (pageWidth*0.2)/110;
         Laya.stage.addChild(start_tgMenu);
-        //监听事件，此侦听事件响应一次后则自动移除侦听
+        //监听事件
         start_tgMenu.on(Event.CLICK, this, onTgOpen);
 
         //加载熊
@@ -154,7 +154,6 @@
     }
     //开始页面元素移除
     function startAllImgDel(e){
-        var _this = this;
         start_title.y -= 10;
         start_startMenu.y += 15;
         start_bear.x += 6;
@@ -165,6 +164,9 @@
             start_tgMenu.graphics.clear();
             start_bear.clear();
 
+            //删除按钮监听
+            start_tgMenu.off(Event.CLICK, this, onTgOpen);
+
             //加载tips页面
             tipsPages = new tipsPage();
 
@@ -174,7 +176,7 @@
             start_tree.zOrder = 3;
 
             //删除循环
-            Laya.timer.clear(_this, startAllImgDel);
+            Laya.timer.clear(this, startAllImgDel);
         }
     }
     //打开活动规则

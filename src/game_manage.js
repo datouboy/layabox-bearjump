@@ -795,7 +795,7 @@
 
     //跳跃中北极熊的动画切换
     _proto.bearJumpAnimationSwitchByN = function(n){
-        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/bear_jump2.ani", "res/ani/Start_bear.ani"];
+        var aniArray = ["res/ani/Tips_bear.ani", "res/ani/bear_jump.ani", "res/ani/bear_jump3.ani", "res/ani/Start_bear.ani"];
         tip_bear.clear();
         tip_bear.loadAnimation(aniArray[n]);
         Laya.stage.addChild(tip_bear);
