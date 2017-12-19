@@ -27,16 +27,28 @@
 	.popBox .popBox_main {padding: 0 20px; color: #fff; font-size: 14px; text-align: center;}
 	.popBox .popBox_main h3,h4,p {padding: 3px 0; margin: 0;}
 	.popBox .popBox_main h3 {font-size: 18px;}
+	.popBox .popBox_main h3.big {font-size: 22px;}
 	.popBox .popBox_main button[type=button] {border: none; background: #fff; height: 36px; line-height: 35px; border-radius: 18px; color:#f40009; font-weight: bold; padding: 0 25px; font-size: 16px;}
 	.popBox .popBox_main p.firstP {padding: 20px 0 10px 0;}
 	.popBox a.close {display: block; position: absolute; width: 30px; height: 59px; background: url('./res/images/pop_close.png') left center no-repeat; background-size: 100% 100%; right: 0; top: -70px;}
 
+
 	.formBox {width: 100%; position: absolute; z-index: 9; left:0; top:0; text-align: center; padding-top: 130px; color: #fff;}
 	.formBox h3 {font-size: 40px; line-height: 40px; padding: 0 0 20px 0; margin: 0;}
-	.formBox .inputBox {width: 80%; height: 40px; background: #fff; border-radius: 4px; margin: 20px auto;}
-	.formBox .inputBox input[type=text] {width: 90%; margin-top: 10px; border:none; font-size: 16px;}
+	.formBox .inputBox {width: 80%; height: 40px; background: #fff; border-radius: 4px; margin: 20px auto; text-align: left;}
+	.formBox .inputBox input[type=text] {width: 90%; margin-top: 10px; border:none; font-size: 16px; margin-left: 13px;}
 	.formBox button.submit {width: 130px; height: 43px; background: url('./res/images/form_submit.png') 0 0 no-repeat; background-size: 100% 100%; border:none;}
 	.formBox button.restart {width: 130px; height: 43px; background: url('./res/images/form_restart.png') 0 0 no-repeat; background-size: 100% 100%; border:none;}
+
+	.formBox .vcode {height: 40px; position: relative;}
+	.formBox .vcode button.getVcode {width: 25%; border:none; background:#f40009; color: #fff; height: 40px; border-radius: 4px; right: 10%; top: 0; position: absolute;}
+	.formBox .vcode .inputBox {width: 50%; display: inline-block; margin: 0 auto; left: 10%; top: 0; position: absolute;}
+	.formBox .vcode .inputBox input[type=text] {width: 80%;}
+
+	.shearPopBox {width: 80%; background:#fff; border-radius: 10px; padding: 20px 0; text-align: center; position: absolute; z-index: 9; left: 10%; top:40px;}
+	.shearPopBox h3 {color: red; font-size: 22px;}
+	.shearPopBox p {font-size: 13px;}
+
 
 	.musicMenu {position: absolute; right: 60px; top: 60px; z-index: 99999;}
 	.musicMenu .control .control-after {
@@ -110,16 +122,33 @@
 	<script src="../src/winner_form.js"></script>
 	<script src="../src/HelloLayaBox.js"></script>
 	<!--jsfile--endTag-->
-	<!--胜利弹窗-->
+	<!--胜利弹窗(未中奖)-->
+	<div class="popBox" id="winner_noGift" style="display: none;">
+		<div class="popBox_main">
+			<img style="width: 86%; margin-top: -80px; position: relative; z-index: 9;" src="./res/images/pop_icon_over.png">
+			<h3 class="big">很遗憾，奖品溜走了</h3>
+			<p class="firstP"><button type="button" class="goToRestart">再玩一次</button></p>
+			<p><button type="button" id="goToShare">邀请好友来战</button></p>
+		</div>
+	</div>
+	<!--胜利弹窗(已中奖)-->
 	<div class="popBox" id="winner_box_one" style="display: none;">
 		<div class="popBox_main">
-			<img style="width: 86%; margin-top: -30px;" src="./res/images/pop_icon.jpg">
-			<h3>恭喜你,成功通关！</h3>
-			<p>可口可乐祝你新年快乐！</p>
-			<h4>送你1个xx礼包~</h4>
+			<h3>你太棒了</h3>
+			<p>姿势完美，顺利通关！</p>
+			<p>送你一个新年礼包</p>
 			<p>快来拆奖吧！</p>
-			<p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p>
-			<p><button type="button" id="goToShare">邀请好友来战</button></p>
+			<img style="width: 86%; margin-top: -30px;" src="./res/images/winner_pop.png">
+			<p class="firstP"><button type="button" id="goToOpenGift">去拆礼包</button></p>
+		</div>
+	</div>
+	<!--中奖礼品-->
+	<div class="popBox" id="winner_gift" style="display: none;">
+		<div class="popBox_main">
+			<h3 class="big">恭喜你</h3>
+			<img style="width: 86%; margin-top: -30px;" src="./res/images/jp_1.png"><!--礼品图片，修改123-->
+			<p>获得可口可乐99-50京东优惠券</p>
+			<p class="firstP"><button type="button" id="goToForm">赶紧来领奖</button></p>
 		</div>
 	</div>
 	<!--分享弹窗-->
@@ -134,12 +163,23 @@
 	<div class="formBox" id="winner_form" style="display: none;">
 		<h3>xxxx</h3>
 		<div>提交你的信息，坐等奖品到家吧~</div>
-		<div class="inputBox"><input type="text" name="" placeholder="姓名" value=""></div>
-		<div class="inputBox"><input type="text" name="" placeholder="电话" value=""></div>
-		<div class="inputBox"><input type="text" name="" placeholder="地址" value=""></div>
-		<div style="padding-bottom: 10px;"><button type="button" class="submit"></button></div>
-		<div><button type="button" class="restart"></button></div>
+		<div class="inputBox" id="user_name"><input type="text" name="" placeholder="姓名" value=""></div>
+		<div class="inputBox" id="user_tel"><input type="text" name="" placeholder="电话" value=""></div>
+		<div class="vcode">
+			<div class="inputBox" id="user_vcode"><input type="text" name="" placeholder="验证码" value=""></div><button class="getVcode">获取验证码</button>
+		</div>
+		<div class="inputBox" id="user_address"><input type="text" name="" placeholder="地址" value=""></div>
+		<div style="padding-bottom: 10px;"><button type="button" class="submit" id="formSubmit"></button></div>
 		<div style="font-size: 12px; padding-top: 100px;">*活动最终解释权归可口可乐乐在上海所有</div>
+	</div>
+	<!--表单提交后-->
+	<div class="shearPopBox" id="shearPopBox" style="display: none;">
+		<h3>信息已提交</h3>
+		<p>您的奖品兑换成功</p>
+		<p>登录对应网站即可使用</p>
+		<p style="padding: 15px 0;"><img src="./res/images/qrcode.jpg" width="60%"></p>
+		<p>关注<span style="color: red;">“可口可乐乐在上海”</span>微信公众号</p>
+		<p>可查询中奖信息，更多福利等着你！</p>
 	</div>
 	<!--失败弹窗-->
 	<div class="popBox" id="gameover_box" style="display: none;">
@@ -148,7 +188,7 @@
 			<h3>游戏失败！</h3>
 			<p>真可惜！</p>
 			<!-- <p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p> -->
-			<p><button type="button" id="goToRestart">再玩一次</button></p>
+			<p><button type="button" class="goToRestart">再玩一次</button></p>
 		</div>
 	</div>
 	<!--活动规则-->
@@ -164,13 +204,25 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+	var pageHeight = window.innerHeight;
+	//ajax获取中奖信息
+	function winningSearch(){
+		var winning = 1;//这里直接模拟Ajax返回数据
+		if (winning == 0){//未中奖
+			$('#winner_noGift').show();
+			$('#winner_noGift').css({'top':(pageHeight - $('#winner_noGift').height())/2 + 'px'});
+		}else{//中奖
+			$('#winner_box_one').show();
+            $('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
+		}
+	}
 	$(function($) {
 		var pageHeight = window.innerHeight;
 		$('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
 		$('#winner_box_share').css({'top':(pageHeight - $('#winner_box_share').height())/2 + 'px'});
 
 		$('#goToShare').click(function(){
-			$('#winner_box_one').hide();
+			$('#winner_noGift').hide();
 			$('#winner_box_share').show();
 			$('#winner_box_share').css({'top':(pageHeight - $('#winner_box_share').height())/2 + 'px'});
 		});
@@ -181,12 +233,25 @@
 			$('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
 		});
 
-		$('#goToForm').click(function(){
+		$('#goToOpenGift').click(function(){
 			$('#winner_box_one').hide();
-			$('#winner_box_share').hide();
+			$('#winner_gift').show();
+			$('#winner_gift').css({'top':(pageHeight - $('#winner_gift').height())/2 + 'px'});
+		});
+
+		$('#goToForm').click(function(){
+			$('#winner_gift').hide();
+			//$('#winner_box_one').hide();
+			//$('#winner_box_share').hide();
 			Laya.winnerFormBg.init();
 			$('#winner_form').show();
 		});
+
+		$('#formSubmit').click(function(){
+			$('#winner_form').hide();
+			$('#shearPopBox').show();
+			$('#shearPopBox').css({'top':(pageHeight - $('#shearPopBox').height())/2 + 'px'});
+		})
 
 		$('#closeTg').click(function(){
 			$('#box_tg').hide();
@@ -197,7 +262,7 @@
 			Laya.startPage_s.closePop();
 		});
 
-		$('#goToRestart').click(function(){
+		$('.goToRestart').click(function(){
 			//$('#gameover_box').hide();
 			window.location.reload();
 		});

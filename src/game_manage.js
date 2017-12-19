@@ -59,7 +59,7 @@
         Tween = new tweenFun();
         //初始化浮冰（浮冰添加、运动、消除）
         gameBins = new gameBin();
-        //获取北极熊的参数
+        //获取北极熊的参数（碰撞检测方块大小）
         Bear_BoxInfo.w = tipsPages.bearInfo.width * 0.4;
         Bear_BoxInfo.h = 30;
     }
@@ -663,8 +663,8 @@
             popBG_Black.alpha += 0.01;
             if(popBG_Black.alpha >= 0.5){
                 Laya.timer.clear(this, popBG_BlackShow);
-                $('#winner_box_one').show();
-                $('#winner_box_one').css({'top':(pageHeight - $('#winner_box_one').height())/2 + 'px'});
+                //写着html上的中奖接口
+                winningSearch();
             }
         }
     }
