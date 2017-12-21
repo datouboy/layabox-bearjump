@@ -250,7 +250,7 @@
         //计算北极熊跳跃次数
         JumpNum ++;
         //当跳跃次数超过50次，加载终点浮冰
-        if(JumpNum >= 40){
+        if(JumpNum >= 30){
             if(!IsAddEndBin){
                 gameBins.addNewBin(JumpNum);
                 gameBins.addEndBinToStage();
@@ -602,11 +602,28 @@
                 Laya.timer.frameLoop(1, _this, winnerShow);
 
                 //换熊的图片
+                Laya.loader.load("res/atlas/images/winner_bear.atlas", Laya.Handler.create(this, stageAdd_winner_bear));
+
+                function stageAdd_winner_bear(){
+                    winner_bear = new Laya.Animation();
+                    winner_bear.loadAnimation("res/ani/winner_bear.ani");
+                    Laya.stage.addChild(winner_bear);
+                    //winner_bear.pivotX = pageWidth*0.45;
+                    //winner_bear.pivotY = tip_bear.y - endBinObj.height*0.39;
+                    winner_bear.scale(0.6,0.6);
+                    winner_bear.y = tip_bear.y - endBinObj.height*0.17;
+                    winner_bear.x = pageWidth*0.55;
+                    winner_bear.zOrder = 4;
+                    winner_bear.play();
+                    tip_bear.clear();
+                }
+                /*
                 winner_bear = new Sprite();
                 winner_bear.loadImage("res/images/winner_bear.png",  pageWidth*0.45, tip_bear.y - endBinObj.height*0.39 , pageWidth*0.25, (pageWidth*0.25)*(234/167));
                 Laya.stage.addChild(winner_bear);
                 winner_bear.zOrder = 4;
                 tip_bear.clear();
+                */
             }
         }
 
@@ -660,7 +677,7 @@
         }
         //半透明黑背景
         function popBG_BlackShow(){
-            popBG_Black.alpha += 0.01;
+            popBG_Black.alpha += 0.005;
             if(popBG_Black.alpha >= 0.5){
                 Laya.timer.clear(this, popBG_BlackShow);
                 //写着html上的中奖接口

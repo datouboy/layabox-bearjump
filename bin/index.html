@@ -146,9 +146,12 @@
 	<div class="popBox" id="winner_gift" style="display: none;">
 		<div class="popBox_main">
 			<h3 class="big">恭喜你</h3>
-			<img style="width: 86%; margin-top: -30px;" src="./res/images/jp_1.png"><!--礼品图片，修改123-->
+			<!--<img style="width: 86%; margin-top: -30px;" src="./res/images/jp_1.png">--><!--礼品图片，修改123-->
+			<p>获得XXXXXXXX</p>
+			<img style="width: 60%; " src="./res/images/hema.png">
 			<p>获得可口可乐99-50京东优惠券</p>
 			<p class="firstP"><button type="button" id="goToForm">赶紧来领奖</button></p>
+			<p class="firstP"><button type="button" id="openUserTg">查看使用规则</button></p>
 		</div>
 	</div>
 	<!--分享弹窗-->
@@ -161,7 +164,6 @@
 	</div>
 	<!--表单弹窗-->
 	<div class="formBox" id="winner_form" style="display: none;">
-		<h3>xxxx</h3>
 		<div>提交你的信息，坐等奖品到家吧~</div>
 		<div class="inputBox" id="user_name"><input type="text" name="" placeholder="姓名" value=""></div>
 		<div class="inputBox" id="user_tel"><input type="text" name="" placeholder="电话" value=""></div>
@@ -201,6 +203,15 @@
 			<p><strong>奖品设置：</strong><br/>666元可口可乐优惠券、可口可乐欢乐餐厅门票2张、可口可乐冬日礼盒</p>
 			<br/><br/>
 			<p><button type="button" id="closeTg2">确认</button></p>
+		</div>
+	</div>
+	<!--使用规则-->
+	<div class="popBox" id="user_tg" style="display: none;">
+		<a class="close" href="javascript:void(0)" id="closeUserTg"></a>
+		<div class="popBox_main">
+			<p style="padding-top: 20px;"><strong>使用规则：</strong><br/>2017年12月22日-2018年1月10日<p>
+			<br/><br/>
+			<p><button type="button" id="closeUserTg2">确认</button></p>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -266,6 +277,21 @@
 			//$('#gameover_box').hide();
 			window.location.reload();
 		});
+
+		$('#openUserTg').click(function(){
+			$('#winner_gift').hide();
+			$('#user_tg').show();
+			$('#user_tg').css({'top':(pageHeight - $('#user_tg').height())/2 + 'px'});
+		});
+		$('#closeUserTg').click(function(){
+			$('#winner_gift').show();
+			$('#user_tg').hide();
+		});
+		$('#closeUserTg2').click(function(){
+			$('#winner_gift').show();
+			$('#user_tg').hide();
+		});
+
 	});
 	////////////////////////////////////////////////////////
 	//Music

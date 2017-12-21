@@ -1,0 +1,113 @@
+{
+    "frames": {
+        "bear1.png": {
+            "frame": {
+                "h": 222,
+                "idx": 0,
+                "w": 167,
+                "x": 0,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 222,
+                "w": 167
+            },
+            "spriteSourceSize": {
+                "h": 222,
+                "w": 167,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear2.png": {
+            "frame": {
+                "h": 103,
+                "idx": 0,
+                "w": 75,
+                "x": 0,
+                "y": 223
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 103,
+                "w": 75
+            },
+            "spriteSourceSize": {
+                "h": 103,
+                "w": 75,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear3.png": {
+            "frame": {
+                "h": 236,
+                "idx": 0,
+                "w": 121,
+                "x": 336,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 236,
+                "w": 121
+            },
+            "spriteSourceSize": {
+                "h": 236,
+                "w": 121,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear4.png": {
+            "frame": {
+                "h": 222,
+                "idx": 0,
+                "w": 167,
+                "x": 168,
+                "y": 0
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 222,
+                "w": 167
+            },
+            "spriteSourceSize": {
+                "h": 222,
+                "w": 167,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        },
+        "bear5.png": {
+            "frame": {
+                "h": 103,
+                "idx": 0,
+                "w": 75,
+                "x": 76,
+                "y": 223
+            },
+            "rotated": false,
+            "sourceSize": {
+                "h": 103,
+                "w": 75
+            },
+            "spriteSourceSize": {
+                "h": 103,
+                "w": 75,
+                "x": 0,
+                "y": 0
+            },
+            "trimmed": false
+        }
+    },
+    "meta": {
+        "image": "winner_bear.png",
+        "prefix": "images/winner_bear/"
+    }
+}
