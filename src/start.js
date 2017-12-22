@@ -80,7 +80,7 @@
         //加载活动规则按钮
         start_tgMenu = new Sprite();
         start_tgMenu.loadImage("res/images/tg_text.png");
-        start_tgMenu.x = pageWidth*0.76;
+        start_tgMenu.x = pageWidth*0.04;
         start_tgMenu.y = pageHeight*0.95;
         start_tgMenu.scaleX = (pageWidth*0.2)/110;
         start_tgMenu.scaleY = (pageWidth*0.2)/110;

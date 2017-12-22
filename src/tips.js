@@ -7,6 +7,7 @@
 	var Handler = Laya.Handler;
 	var WebGL   = Laya.WebGL;
     var Event   = Laya.Event;
+    var Text    = Laya.Text;
 
     var pageWidth  = Browser.clientWidth;
     var pageHeight = Browser.clientHeight;
@@ -131,7 +132,39 @@
                 Laya.timer.clear(_this, tip_bear_xgo);
 
                 //添加监听事件，全屏点击开始游戏
-                Laya.stage.once(Event.CLICK, _this, tips_startMenu_Click);
+                //Laya.stage.once(Event.CLICK, _this, tips_startMenu_Click);
+                //3、2、1倒计时
+
+                orderNum = new Text();
+                orderNum.fontSize = 70;
+                orderNum.color = "#ffffff";
+                orderNum.alpha = 1;
+                Laya.stage.addChild(orderNum);
+                orderNum.zOrder = 99;
+                orderNum.text = 3;
+                orderNum.x = (pageWidth - orderNum.width)/2;
+                orderNum.y = pageHeight * 0.45;
+                Laya.timer.loop(1, this, countDown);
+
+                var num = 1;
+                function countDown(){
+                    num ++;
+                    if(num >= 0 && num <= 50){
+                        orderNum.text = 3;
+                    }else if(num > 50 && num <= 100){
+                        orderNum.text = 2;
+                    }else if(num > 100 && num <= 150){
+                        orderNum.text = 1;
+                    }else if(num > 150 && num <= 200){
+                        orderNum.text = 'Go!';
+                        orderNum.x = (pageWidth - orderNum.width)/2;
+                    }else if(num >= 200){
+                        Laya.timer.clear(this, countDown);
+                        orderNum.graphics.clear();
+                        tips_startMenu_Click();
+                    }
+                }
+
                 //获取北极熊的宽高
                 var bearInfo = tip_bear.getBounds();
                 _proto.bearInfo.width  = bearInfo.width;
@@ -141,7 +174,7 @@
         }
 
         //点击开始游戏
-        function tips_startMenu_Click(e){
+        function tips_startMenu_Click(){
             Laya.timer.frameLoop(1, this, remove_animate);
             //正式开始游戏
         }

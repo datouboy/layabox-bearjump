@@ -18,6 +18,7 @@
     <script type="text/javascript">
         const siteUrl = './';
         const musicMp3 = './res/sounds/bgm.mp3';
+        var musicOnOff = true;
     </script>
 	<style type="text/css">
 	body {position: relative;}
@@ -137,10 +138,10 @@
 	<!--胜利弹窗(已中奖)-->
 	<div class="popBox" id="winner_box_one" style="display: none;">
 		<div class="popBox_main">
-			<h3>你太棒了</h3>
-			<p>姿势完美，顺利通关！</p>
-			<p>送你一个新年礼包</p>
-			<p>快来拆奖吧！</p>
+			<!-- <h3>你太棒了</h3> -->
+			<img src="./res/images/text_taibang.png" width="66%">
+			<p>谢谢你送我回家，</p>
+			<p>有一份新年礼物要送你！</p>
 			<img style="width: 86%; margin-top: -30px;" src="./res/images/winner_pop.png">
 			<p class="firstP"><button type="button" id="goToOpenGift">去拆礼包</button></p>
 		</div>
@@ -190,10 +191,10 @@
 	<div class="popBox" id="gameover_box" style="display: none;">
 		<div class="popBox_main">
 			<img style="width: 86%; margin-top: -80px; position: relative; z-index: 9;" src="./res/images/pop_icon_over.png">
-			<h3>游戏失败！</h3>
-			<p>真可惜！</p>
+			<!-- <h3>游戏失败！</h3> -->
+			<img src="./res/images/text_shibai.png" width="66%">
 			<!-- <p class="firstP"><button type="button" id="goToForm">去拆礼包</button></p> -->
-			<p><button type="button" class="goToRestart">再玩一次</button></p>
+			<p><button type="button" class="goToRestart">再试一次</button></p>
 		</div>
 	</div>
 	<!--活动规则-->
@@ -203,16 +204,16 @@
 			<img style="width: 66%; margin-top: -80px; position: relative; z-index: 9;" src="./res/images/pop_icon_tg.png">
 			<div style="height: 250px; overflow-y: auto; margin:10px auto;">
 				<div class="tgbox">
-		        	<p><strong>一、活动日期：</strong>2017年12月22日20:00-2018年12月31日24:00；</p>
+					<p><strong>一、活动日期：</strong>2017年12月22日20:00-2017年12月31日24:00；</p>
 					<p><strong>二、游戏机制：</strong>参与者通过重力感应，左右倾斜手机跳过浮冰送小熊回家，即可拆开新年礼包；</p>
 					<p><strong>三、游戏奖品：</strong>本次活动共提供5320份奖品，可口可乐欢乐餐厅自助餐券（价值298元）、优酷季卡（价值56元）以及盒马生鲜券（买可口可乐公司产品满25-5元，部分商品除外）；</p>
-					<p><strong>三、中奖概率：</strong>游戏通关则100%中奖，每位微信用户可以多次中奖，奖品领完为止；</p>
-					<p><strong>四、活动范围：</strong>上海、苏州、无锡、南通、嘉兴；</p>
-					<p><strong>五、领奖需知：</strong>
+					<p><strong>四、中奖概率：</strong>游戏通关则100%中奖，每位微信用户可以多次中奖，奖品领完为止；</p>
+					<p><strong>五、活动范围：</strong>上海、苏州、无锡、南通、嘉兴；</p>
+					<p><strong>六、领奖需知：</strong>
 					①可口可乐欢乐餐厅自助餐券：请务必填写真实姓名+手机号+地址兑奖，我们将在用户中奖后1-5个工作日寄出礼品；<br/>
 					②优酷季卡：中奖后填写姓名、手机号即可自动开通优酷会员权限，自兑换之日起3个月内有效；<br/>
 					③盒马生鲜券：中奖后需保存兑奖二维码，打开盒马生鲜APP后扫码兑换（使用时间为2017年12月20日-2018年1月3日）；</p>
-					<p><strong>六、特别提醒：</strong>请关注“可口可乐乐在上海”微信公众号获取中奖信息，并在活动结束前提交个人信息，过期视为弃权。 </p>
+					<p><strong>七、特别提醒：</strong>请关注“可口可乐乐在上海”微信公众号获取中奖信息，并在活动结束前提交个人信息，过期视为弃权。</p>
 				</div>
 			</div>
 			<p><button type="button" id="closeTg2">确认</button></p>
@@ -222,8 +223,9 @@
 	<div class="popBox" id="user_tg" style="display: none;">
 		<a class="close" href="javascript:void(0)" id="closeUserTg"></a>
 		<div class="popBox_main">
-			<p style="padding-top: 20px;"><strong>使用规则：</strong><br/>2017年12月22日-2018年1月10日<p>
-			<br/><br/>
+			<p style="padding-top: 20px;"><strong style="font-size: 16px; display: block; margin-bottom: 15px;">优惠券使用攻略：</strong>1、保存兑奖二维码<br/>2、打开盒马生鲜APP扫码兑奖<p>
+			<p style="padding: 15px 0;"><img src="./res/images/qrcode.jpg" width="60%"></p>
+			<p style="margin-bottom: 10px;">关注“可口可乐乐在上海，<br/>获取中奖信息与更多福利</p>
 			<p><button type="button" id="closeUserTg2">确认</button></p>
 		</div>
 	</div>
@@ -332,9 +334,11 @@
 					_self.audio.pause();
 					$("#musicMenu .control").removeClass("show_loop");
 					_self.musicPlay = false;
+					musicOnOff = false;
 				}else{
 					console.log('music On');
 					_self.audioAutoPlay();
+					musicOnOff = true;
 				}
 			});
 			this.audioAutoPlay('Jaudio');

@@ -566,7 +566,9 @@
 
         //播放弹跳音效
         function onPlaySound(){
-            SoundManager.playSound("res/sounds/tan.mp3", 1);
+            if(musicOnOff){
+                SoundManager.playSound("res/sounds/tan.mp3", 1);
+            }
         }
     }
 

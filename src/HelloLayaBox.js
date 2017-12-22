@@ -85,6 +85,9 @@
             ["lineTo", 4, 0]
         ];
         loadTiao.graphics.drawPath((pageWidth-208)/2 + 4, Math.round(pageHeight/2.5) - 6, path, {fillStyle: "#4892b3"});
+
+        $('#layaContainer').width(pageWidth);
+        $('#layaContainer').height(pageHeight);
         //init();
 	})();
 
