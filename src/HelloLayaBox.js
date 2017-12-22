@@ -27,6 +27,8 @@
 		Laya.stage.alignV = Stage.ALIGN_MIDDLE;
 		Laya.stage.alignH = Stage.ALIGN_CENTER;
 
+        Laya.stage.screenAdaptationEnabled = false;
+
 		Laya.stage.scaleMode = "showall";
 		Laya.stage.bgColor   = "#79d0f7";
 
@@ -88,6 +90,7 @@
 
         $('#layaContainer').width(pageWidth);
         $('#layaContainer').height(pageHeight);
+        $('body').css({'width':pageWidth, 'height':pageHeight});
         //init();
 	})();
 
