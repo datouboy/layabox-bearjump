@@ -250,7 +250,7 @@
         //计算北极熊跳跃次数
         JumpNum ++;
         //当跳跃次数超过50次，加载终点浮冰
-        if(JumpNum >= 30){
+        if(JumpNum >= 20){
             if(!IsAddEndBin){
                 gameBins.addNewBin(JumpNum);
                 gameBins.addEndBinToStage();
